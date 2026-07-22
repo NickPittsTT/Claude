@@ -145,7 +145,7 @@
             padding: 10px;
         }
         .monster-svg {
-            width: clamp(80px, 15vw, 150px);
+            width: clamp(60px, min(15vw, 16vh), 150px);
             height: auto;
             transition: transform 0.3s;
         }
@@ -218,8 +218,9 @@
             padding: 10px;
         }
         .plate {
-            width: clamp(230px, 45vw, 400px);
-            height: clamp(230px, 45vw, 400px);
+            /* scale by height too, so short/wide laptop windows don't clip the plate */
+            width: clamp(170px, min(45vw, 40vh), 400px);
+            height: clamp(170px, min(45vw, 40vh), 400px);
             background: radial-gradient(circle, #f5f5f5 0%, #e0e0e0 100%);
             border-radius: 50%;
             border: 8px solid #ccc;
@@ -234,15 +235,15 @@
             cursor: pointer;
         }
         .plate-slot {
-            width: clamp(58px, 11vw, 88px);
-            height: clamp(58px, 11vw, 88px);
+            width: clamp(44px, min(11vw, 9.5vh), 88px);
+            height: clamp(44px, min(11vw, 9.5vh), 88px);
             background: rgba(255,255,255,0.5);
             border-radius: 50%;
             border: 3px dashed #aaa;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(38px, 7.5vw, 60px);
+            font-size: clamp(28px, min(7.5vw, 6.5vh), 60px);
             transition: all 0.2s;
             pointer-events: none;
         }
@@ -268,15 +269,15 @@
         }
         .prep-station.active { display: block; }
         .prep-bowl {
-            width: 100px;
-            height: 100px;
+            width: clamp(64px, 13vh, 100px);
+            height: clamp(64px, 13vh, 100px);
             background: radial-gradient(circle, #fff 0%, #ddd 100%);
             border-radius: 50%;
             margin: 10px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: clamp(30px, 6.5vh, 48px);
             border: 4px solid #654321;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
@@ -288,7 +289,7 @@
 
         /* Pantry */
         .pantry {
-            height: clamp(200px, 32vh, 300px);
+            height: clamp(140px, 28vh, 300px);
             background: linear-gradient(180deg, #8B5A2B 0%, #654321 100%);
             border-top: 5px solid #4a2c17;
             padding: 15px;
@@ -298,14 +299,14 @@
             align-items: center;
         }
         .ingredient {
-            width: clamp(64px, 12vw, 96px);
-            height: clamp(64px, 12vw, 96px);
+            width: clamp(56px, min(12vw, 15vh), 96px);
+            height: clamp(56px, min(12vw, 15vh), 96px);
             background: rgba(255,255,255,0.2);
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(42px, 8.5vw, 64px);
+            font-size: clamp(36px, min(8.5vw, 10vh), 64px);
             cursor: pointer;
             transition: all 0.2s;
             flex-shrink: 0;
@@ -981,6 +982,7 @@
 
             stopTimer();
             clearTimeout(gameState.memoryTimeout);
+            clearTimeout(gameState.prepHideTimeout);
 
             gameState.level = levelNum;
             gameState.timeLeft = config.time;
@@ -1174,6 +1176,13 @@
                     pickPantrySet(config);
                     generateRegularOrder();
                     buildPantry(gameState.pantrySet);
+
+                    // Tuck the finished prep station away so the plate and
+                    // monster get the vertical space back
+                    clearTimeout(gameState.prepHideTimeout);
+                    gameState.prepHideTimeout = setTimeout(() => {
+                        document.getElementById('prepStation').classList.remove('active');
+                    }, 2000);
                 }, 500);
             }
         }
@@ -1314,6 +1323,9 @@
                 document.getElementById('overlayTitle').textContent = '🏆 LEGEND CHEF! 🏆';
                 document.getElementById('nextBtn').textContent = 'Play Again 🔄';
                 document.getElementById('nextBtn').onclick = () => {
+                    // Stop the unload auto-save from instantly re-writing the
+                    // save we are clearing, or Play Again restarts at level 12
+                    gameState.kitchenStarted = false;
                     localStorage.removeItem('monsterKitchenSave');
                     location.reload();
                 };
