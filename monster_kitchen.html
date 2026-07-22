@@ -30,6 +30,7 @@
             justify-content: center;
             z-index: 300;
             flex-direction: column;
+            gap: 18px;
         }
         .title-screen.hidden { display: none !important; }
 
@@ -37,7 +38,7 @@
             font-size: clamp(28px, 5vw, 48px);
             color: #FFD700;
             text-shadow: 3px 3px 0 #5D3A1A, 6px 6px 0 rgba(0,0,0,0.3);
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             text-align: center;
             animation: titleBounce 2s ease-in-out infinite;
         }
@@ -66,6 +67,29 @@
             transform: translateY(6px);
             box-shadow: 0 0 0 #D84315, 0 5px 10px rgba(0,0,0,0.3);
         }
+
+        .menu-btn {
+            color: #fff;
+            border: none;
+            padding: clamp(12px, 2.5vw, 20px) clamp(25px, 4vw, 50px);
+            font-size: clamp(16px, 2.5vw, 24px);
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.1s;
+        }
+        .menu-btn.math {
+            background: linear-gradient(180deg, #42A5F5 0%, #1E88E5 100%);
+            border: 4px solid #1565C0;
+            box-shadow: 0 5px 0 #1565C0, 0 8px 15px rgba(0,0,0,0.3);
+        }
+        .menu-btn.coloring {
+            background: linear-gradient(180deg, #AB47BC 0%, #8E24AA 100%);
+            border: 4px solid #6A1B9A;
+            box-shadow: 0 5px 0 #6A1B9A, 0 8px 15px rgba(0,0,0,0.3);
+        }
+        .menu-btn:active { transform: translateY(5px); box-shadow: none; }
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
@@ -142,9 +166,9 @@
         .order-bubble {
             background: white;
             border-radius: 20px;
-            padding: 10px 15px;
+            padding: 12px 18px;
             margin: 10px 0;
-            min-width: 120px;
+            min-width: 140px;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             position: relative;
@@ -160,13 +184,13 @@
             border-top: 10px solid white;
         }
         .order-items {
-            font-size: clamp(20px, 4vw, 32px);
+            font-size: clamp(30px, 5.5vw, 46px);
             display: flex;
-            gap: 5px;
+            gap: 6px;
             justify-content: center;
             flex-wrap: wrap;
         }
-        .order-items.hidden span { filter: blur(12px); opacity: 0.4; }
+        .order-items.hidden span { filter: blur(14px); opacity: 0.35; }
         .memory-warning {
             position: absolute;
             top: -40px;
@@ -180,6 +204,7 @@
             font-weight: bold;
             opacity: 0;
             transition: opacity 0.3s;
+            white-space: nowrap;
         }
         .memory-warning.show { opacity: 1; }
 
@@ -193,8 +218,8 @@
             padding: 10px;
         }
         .plate {
-            width: clamp(200px, 40vw, 350px);
-            height: clamp(200px, 40vw, 350px);
+            width: clamp(230px, 45vw, 400px);
+            height: clamp(230px, 45vw, 400px);
             background: radial-gradient(circle, #f5f5f5 0%, #e0e0e0 100%);
             border-radius: 50%;
             border: 8px solid #ccc;
@@ -209,15 +234,15 @@
             cursor: pointer;
         }
         .plate-slot {
-            width: clamp(45px, 8vw, 65px);
-            height: clamp(45px, 8vw, 65px);
+            width: clamp(58px, 11vw, 88px);
+            height: clamp(58px, 11vw, 88px);
             background: rgba(255,255,255,0.5);
             border-radius: 50%;
             border: 3px dashed #aaa;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(28px, 5vw, 40px);
+            font-size: clamp(38px, 7.5vw, 60px);
             transition: all 0.2s;
             pointer-events: none;
         }
@@ -225,10 +250,6 @@
             border-style: solid;
             background: rgba(255,255,255,0.8);
             animation: popIn 0.3s;
-        }
-        .plate-slot.highlighted {
-            background: rgba(255,215,0,0.5);
-            border-color: #FFD700;
         }
         @keyframes popIn {
             0% { transform: scale(0); }
@@ -247,44 +268,44 @@
         }
         .prep-station.active { display: block; }
         .prep-bowl {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             background: radial-gradient(circle, #fff 0%, #ddd 100%);
             border-radius: 50%;
             margin: 10px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 48px;
             border: 4px solid #654321;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .prep-instructions {
             color: white;
-            font-size: clamp(12px, 2vw, 16px);
+            font-size: clamp(14px, 2.5vw, 20px);
             margin-bottom: 5px;
         }
 
         /* Pantry */
         .pantry {
-            height: clamp(180px, 30vh, 280px);
+            height: clamp(200px, 32vh, 300px);
             background: linear-gradient(180deg, #8B5A2B 0%, #654321 100%);
             border-top: 5px solid #4a2c17;
             padding: 15px;
             display: flex;
-            gap: 10px;
+            gap: 12px;
             overflow-x: auto;
             align-items: center;
         }
         .ingredient {
-            width: clamp(50px, 8vw, 70px);
-            height: clamp(50px, 8vw, 70px);
+            width: clamp(64px, 12vw, 96px);
+            height: clamp(64px, 12vw, 96px);
             background: rgba(255,255,255,0.2);
-            border-radius: 15px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(32px, 6vw, 45px);
+            font-size: clamp(42px, 8.5vw, 64px);
             cursor: pointer;
             transition: all 0.2s;
             flex-shrink: 0;
@@ -307,11 +328,11 @@
             position: fixed;
             pointer-events: none;
             z-index: 1000;
-            font-size: clamp(32px, 6vw, 45px);
+            font-size: clamp(42px, 8.5vw, 64px);
             opacity: 0.9;
         }
 
-        /* Level Complete Overlay */
+        /* Overlays */
         .overlay {
             position: fixed;
             top: 0;
@@ -351,23 +372,233 @@
             margin-top: 20px;
             box-shadow: 0 5px 0 #2E7D32;
         }
-        .next-btn:active {
-            transform: translateY(5px);
-            box-shadow: none;
-        }
+        .next-btn:active { transform: translateY(5px); box-shadow: none; }
 
-        /* Landscape Optimization */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .game-header { padding: 5px 10px; font-size: 14px; }
-            .main-area { flex-direction: row; }
-            .monster-section { flex: 0.8; }
-            .monster-svg { width: 80px; }
-            .plate-section { flex: 1.2; }
-            .plate { width: 180px; height: 180px; }
-            .plate-slot { width: 45px; height: 45px; }
-            .pantry { height: 120px; }
-            .ingredient { width: 55px; height: 55px; font-size: 32px; }
+        /* ===== MATH SCREEN ===== */
+        .math-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0d2137 0%, #1a3a5c 100%);
+            display: none;
+            flex-direction: column;
+            z-index: 350;
+            color: white;
         }
+        .math-screen.active { display: flex; }
+        .math-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.3);
+        }
+        .math-title { font-size: clamp(18px, 3vw, 26px); color: #FFD700; font-weight: bold; }
+        .icon-btn {
+            background: rgba(255,255,255,0.15);
+            border: 3px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: clamp(20px, 3.5vw, 28px);
+            width: clamp(46px, 8vw, 60px);
+            height: clamp(46px, 8vw, 60px);
+            border-radius: 50%;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .icon-btn:active { transform: scale(0.9); }
+        .math-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: clamp(10px, 2vh, 20px);
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .math-prompt {
+            font-size: clamp(22px, 4vw, 36px);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .math-prompt .kw { color: #FFD700; }
+        .math-visual {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 20px;
+            min-height: clamp(100px, 22vh, 200px);
+            flex-wrap: wrap;
+        }
+        .big-object { font-size: clamp(80px, 18vw, 150px); animation: bounce 2s infinite; }
+        .tower { display: flex; flex-direction: column-reverse; align-items: center; gap: 3px; }
+        .tower-label { margin-top: 8px; font-size: clamp(16px, 3vw, 24px); font-weight: bold; }
+        .block {
+            width: clamp(30px, 5.5vw, 44px);
+            height: clamp(30px, 5.5vw, 44px);
+            border-radius: 6px;
+            border: 2px solid rgba(0,0,0,0.3);
+        }
+        .block.ghost { background: transparent !important; border: 2px dashed rgba(255,255,255,0.5); }
+        .block.flash { animation: blockFlash 0.6s infinite alternate; }
+        @keyframes blockFlash { from { opacity: 0.3; } to { opacity: 1; } }
+        .count-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: clamp(140px, 26vw, 240px);
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(30px, 6vw, 48px);
+        }
+        .plus-sign { font-size: clamp(36px, 7vw, 60px); color: #FFD700; font-weight: bold; }
+        .rock-badge {
+            background: #5D4037;
+            border-radius: 20px;
+            padding: 10px 18px;
+            font-size: clamp(30px, 6vw, 48px);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 3px solid #3E2723;
+        }
+        .rock-badge b { color: #FFD700; }
+        .num-sentence { font-size: clamp(40px, 8vw, 70px); font-weight: bold; letter-spacing: 4px; }
+        .num-sentence .blank {
+            display: inline-block;
+            min-width: 1.2em;
+            border-bottom: 5px solid #FFD700;
+            color: #FFD700;
+        }
+        .picto-row { display: flex; align-items: center; gap: 10px; font-size: clamp(26px, 5vw, 42px); }
+        .picto-day { width: 5.5em; font-size: clamp(16px, 3vw, 24px); text-align: right; font-weight: bold; }
+        .math-answers {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: clamp(8px, 1.5vw, 15px);
+            max-width: 700px;
+        }
+        .answer-btn {
+            background: linear-gradient(180deg, #42A5F5 0%, #1E88E5 100%);
+            border: 4px solid #1565C0;
+            box-shadow: 0 5px 0 #1565C0;
+            color: white;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: clamp(26px, 5vw, 40px);
+            min-width: clamp(60px, 11vw, 85px);
+            min-height: clamp(60px, 11vw, 85px);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.1s;
+        }
+        .answer-btn:active { transform: translateY(4px); box-shadow: none; }
+        .answer-btn.shape-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            font-size: clamp(14px, 2.5vw, 20px);
+            background: linear-gradient(180deg, #66BB6A 0%, #43A047 100%);
+            border-color: #2E7D32;
+            box-shadow: 0 5px 0 #2E7D32;
+        }
+        .answer-btn.shape-btn svg { width: clamp(50px, 9vw, 75px); height: clamp(50px, 9vw, 75px); }
+        .answer-btn.wrong-flash { animation: wrongShake 0.4s; background: linear-gradient(180deg, #ef5350, #d32f2f); border-color: #b71c1c; box-shadow: 0 5px 0 #b71c1c; }
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .math-feedback {
+            min-height: clamp(50px, 8vh, 70px);
+            font-size: clamp(18px, 3.5vw, 28px);
+            text-align: center;
+            padding: 0 15px;
+        }
+        .math-feedback.good { color: #81C784; }
+        .math-feedback.hint { color: #FFB74D; }
+        .math-dots { display: flex; gap: 8px; font-size: clamp(20px, 4vw, 30px); min-height: 1.2em; }
+
+        /* Math menu picker */
+        .math-menu {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }
+        .math-menu.active { display: flex; }
+        .math-menu .menu-btn { min-width: clamp(240px, 50vw, 380px); }
+        .math-menu .menu-btn.shapes { background: linear-gradient(180deg, #66BB6A, #43A047); border: 4px solid #2E7D32; box-shadow: 0 5px 0 #2E7D32; }
+        .math-menu .menu-btn.gap { background: linear-gradient(180deg, #EF5350, #E53935); border: 4px solid #B71C1C; box-shadow: 0 5px 0 #B71C1C; }
+        .math-menu .menu-btn.add { background: linear-gradient(180deg, #FFA726, #FB8C00); border: 4px solid #E65100; box-shadow: 0 5px 0 #E65100; }
+        .math-quiz { display: none; flex-direction: column; flex: 1; }
+        .math-quiz.active { display: flex; }
+
+        /* ===== COLORING SCREEN ===== */
+        .color-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #263238 0%, #37474F 100%);
+            display: none;
+            flex-direction: column;
+            z-index: 350;
+            color: white;
+        }
+        .color-screen.active { display: flex; }
+        .color-tabs { display: flex; gap: 8px; }
+        .pic-tab {
+            background: rgba(255,255,255,0.15);
+            border: 3px solid transparent;
+            border-radius: 15px;
+            font-size: clamp(22px, 4vw, 30px);
+            padding: 5px 12px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .pic-tab.active { border-color: #FFD700; background: rgba(255,215,0,0.25); }
+        .color-canvas {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            min-height: 0;
+        }
+        .color-canvas svg {
+            max-width: 100%;
+            max-height: 100%;
+            height: clamp(240px, 55vh, 520px);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        .paintable { cursor: pointer; }
+        .paintable:hover { opacity: 0.85; }
+        .palette {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: clamp(6px, 1.2vw, 12px);
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+        }
+        .swatch {
+            width: clamp(42px, 8vw, 58px);
+            height: clamp(42px, 8vw, 58px);
+            border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .swatch.selected { border-color: #FFD700; transform: scale(1.2); box-shadow: 0 0 12px #FFD700; }
 
         /* Particles */
         .particle {
@@ -380,18 +611,31 @@
             0% { opacity: 1; transform: scale(1) translateY(0); }
             100% { opacity: 0; transform: scale(0.5) translateY(-50px); }
         }
+
+        /* Landscape Optimization */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .game-header { padding: 5px 10px; font-size: 14px; }
+            .monster-section { flex: 0.8; }
+            .monster-svg { width: 80px; }
+            .plate-section { flex: 1.2; }
+            .plate { width: 200px; height: 200px; }
+            .plate-slot { width: 52px; height: 52px; font-size: 34px; }
+            .pantry { height: 130px; }
+            .ingredient { width: 62px; height: 62px; font-size: 40px; }
+        }
     </style>
 </head>
 <body>
     <!-- Title Screen -->
     <div class="title-screen" id="titleScreen">
         <div class="game-title">👨‍🍳 Monster Kitchen 👨‍🍳</div>
-        <button class="start-btn" onclick="startGame()">START COOKING!</button>
+        <button class="start-btn" onclick="startGame()">🍳 START COOKING!</button>
+        <button class="menu-btn math" onclick="openMathMenu()">🔢 MATH GAMES</button>
+        <button class="menu-btn coloring" onclick="openColoring()">🎨 COLORING</button>
     </div>
 
     <!-- Game Container -->
     <div class="game-container" id="gameContainer">
-        <!-- Header -->
         <div class="game-header">
             <div class="level-info">
                 <span>Level <span id="levelDisplay">1</span>/12</span>
@@ -400,9 +644,7 @@
             <div class="timer" id="timer">60s</div>
         </div>
 
-        <!-- Main Area -->
         <div class="main-area">
-            <!-- Monster Section -->
             <div class="monster-section">
                 <svg class="monster-svg" id="monster" viewBox="0 0 100 100">
                     <ellipse cx="50" cy="50" rx="40" ry="35" fill="#7CB342"/>
@@ -421,20 +663,59 @@
                 </div>
             </div>
 
-            <!-- Plate Section -->
             <div class="plate-section">
                 <div class="plate" id="plate"></div>
             </div>
         </div>
 
-        <!-- Prep Station -->
         <div class="prep-station" id="prepStation">
             <div class="prep-instructions" id="prepInstructions">Make Egg Salad!</div>
             <div class="prep-bowl" id="prepBowl">🥣</div>
         </div>
 
-        <!-- Pantry -->
         <div class="pantry" id="pantry"></div>
+    </div>
+
+    <!-- Math Screen -->
+    <div class="math-screen" id="mathScreen">
+        <div class="math-header">
+            <button class="icon-btn" id="mathBackBtn" onclick="mathBack()">🏠</button>
+            <div class="math-title" id="mathTitle">Math Games</div>
+            <button class="icon-btn" onclick="replayPrompt()">🔊</button>
+        </div>
+
+        <!-- Activity picker (practice mode) -->
+        <div class="math-menu" id="mathMenu">
+            <button class="menu-btn shapes" onclick="startMathPractice('shapes')">🟢 Shape Monsters</button>
+            <button class="menu-btn gap" onclick="startMathPractice('gap')">🧱 Gap Monsters</button>
+            <button class="menu-btn add" onclick="startMathPractice('add')">🍪 Count On!</button>
+        </div>
+
+        <!-- Question area -->
+        <div class="math-quiz" id="mathQuiz">
+            <div class="math-body">
+                <div class="math-dots" id="mathDots"></div>
+                <div class="math-prompt" id="mathPrompt"></div>
+                <div class="math-visual" id="mathVisual"></div>
+                <div class="math-answers" id="mathAnswers"></div>
+                <div class="math-feedback" id="mathFeedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Coloring Screen -->
+    <div class="color-screen" id="colorScreen">
+        <div class="math-header">
+            <button class="icon-btn" onclick="closeColoring()">🏠</button>
+            <div class="color-tabs" id="colorTabs">
+                <button class="pic-tab active" data-pic="monster" onclick="switchPicture('monster')">👨‍🍳</button>
+                <button class="pic-tab" data-pic="shapes" onclick="switchPicture('shapes')">🔷</button>
+                <button class="pic-tab" data-pic="icecream" onclick="switchPicture('icecream')">🍦</button>
+            </div>
+            <button class="icon-btn" onclick="resetPicture()">🧽</button>
+        </div>
+        <div class="color-canvas" id="colorCanvas"></div>
+        <div class="palette" id="palette"></div>
     </div>
 
     <!-- Level Complete Overlay -->
@@ -454,45 +735,51 @@
     </div>
 
     <script>
-        // --- GAME STATE ---
+        // ============================================================
+        // GAME STATE
+        // ============================================================
         let gameState = {
             level: 1,
-            score: 0,
             timeLeft: 60,
             timerInterval: null,
             memoryTimeout: null,
             selectedIngredient: null,
             plateSlots: [],
             currentOrder: [],
+            pantrySet: [],
             targetCategory: null,
             prepRequired: false,
             prepIngredients: [],
             prepCollected: [],
             prepTarget: null,
             prepComplete: false,
-            memoryMode: false,
-            orderVisible: true
+            memoryMode: false
         };
 
-        // --- LEVEL CONFIG ---
+        // ============================================================
+        // LEVEL CONFIG — memory mode on EVERY level after 6
+        // ============================================================
         const levels = [
-            { name: "Morning Shift", time: 60, items: 2, memory: false, prep: false, type: "exact" },
-            { name: "Color Match", time: 55, items: 3, memory: false, prep: false, type: "color" },
-            { name: "Shape Sorter", time: 50, items: 3, memory: false, prep: false, type: "shape" },
-            { name: "Prep Time!", time: 50, items: 3, memory: false, prep: true, type: "exact" },
-            { name: "Memory Challenge", time: 45, items: 3, memory: true, prep: false, type: "exact" },
-            { name: "Speed Round", time: 40, items: 4, memory: false, prep: false, type: "exact" },
-            { name: "Mix Master", time: 40, items: 4, memory: true, prep: true, type: "exact" },
-            { name: "Expert Chef", time: 35, items: 5, memory: false, prep: false, type: "exact" },
-            { name: "Ultimate Test", time: 30, items: 5, memory: true, prep: true, type: "exact" },
-            { name: "Speed Demon", time: 25, items: 6, memory: false, prep: false, type: "exact" },
-            { name: "Master Chef", time: 20, items: 7, memory: true, prep: true, type: "exact" },
-            { name: "Legend Chef", time: 15, items: 8, memory: true, prep: true, type: "exact" }
+            { name: "Morning Shift",   time: 60, items: 2, memory: false, prep: false, type: "exact" },
+            { name: "Color Match",     time: 55, items: 3, memory: false, prep: false, type: "color" },
+            { name: "Shape Sorter",    time: 50, items: 3, memory: false, prep: false, type: "shape" },
+            { name: "Prep Time!",      time: 50, items: 3, memory: false, prep: true,  type: "exact" },
+            { name: "Memory Practice", time: 45, items: 3, memory: true,  prep: false, type: "exact" },
+            { name: "Toy Time!",       time: 45, items: 4, memory: false, prep: false, type: "objects" },
+            { name: "Mix Master",      time: 45, items: 4, memory: true,  prep: true,  type: "exact" },
+            { name: "Expert Chef",     time: 40, items: 5, memory: true,  prep: false, type: "exact" },
+            { name: "Ultimate Test",   time: 40, items: 5, memory: true,  prep: true,  type: "exact" },
+            { name: "Toy Memory",      time: 35, items: 6, memory: true,  prep: false, type: "objects" },
+            { name: "Master Chef",     time: 35, items: 7, memory: true,  prep: true,  type: "exact" },
+            { name: "Legend Chef",     time: 30, items: 8, memory: true,  prep: true,  type: "exact" }
         ];
 
-        // --- INGREDIENTS ---
+        // ============================================================
+        // INGREDIENT POOLS — foods, toys/objects, colors, 2D shapes
+        // ============================================================
         const ingredients = {
-            exact: ['🍎', '🍌', '🍇', '🍓', '🥕', '🌽', '🥦', '🍄'],
+            food: ['🍎', '🍌', '🍇', '🍓', '🥕', '🌽', '🥦', '🍄', '🍞', '🧀', '🥚', '🍪', '🍩', '🍕'],
+            objects: ['🚗', '⚽', '🎲', '🧸', '📚', '✏️', '🎈', '🪁', '🥁', '🎁', '🔑', '☂️'],
             color: {
                 red: ['🍎', '🍓', '🍅', '🌶️'],
                 yellow: ['🍌', '🌽', '🧀', '🍋'],
@@ -509,7 +796,11 @@
             }
         };
 
-        // --- AUDIO SYSTEM ---
+        function shuffled(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+        // ============================================================
+        // AUDIO — synth sounds + text-to-speech
+        // ============================================================
         let audioCtx = null;
 
         function initAudio() {
@@ -581,18 +872,40 @@
             }
         }
 
-        // --- HAPTICS ---
+        function speak(text) {
+            try {
+                if (!window.speechSynthesis) return;
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.rate = 0.85;
+                u.pitch = 1.1;
+                speechSynthesis.speak(u);
+            } catch(e) { /* audio is a bonus, never block the game on it */ }
+        }
+
         function vibrate(pattern) {
             if (navigator.vibrate) {
                 navigator.vibrate(pattern);
             }
         }
 
-        // --- START GAME ---
+        // ============================================================
+        // SCREEN MANAGEMENT
+        // ============================================================
+        function showScreen(name) {
+            document.getElementById('titleScreen').classList.toggle('hidden', name !== 'title');
+            document.getElementById('gameContainer').classList.toggle('active', name === 'game');
+            document.getElementById('mathScreen').classList.toggle('active', name === 'math');
+            document.getElementById('colorScreen').classList.toggle('active', name === 'color');
+        }
+
+        // ============================================================
+        // KITCHEN GAME
+        // ============================================================
         function startGame() {
             initAudio();
+            gameState.kitchenStarted = true;
 
-            // Load saved progress
             const saved = localStorage.getItem('monsterKitchenSave');
             if (saved) {
                 try {
@@ -608,13 +921,10 @@
                 gameState.level = 1;
             }
 
-            document.getElementById('titleScreen').classList.add('hidden');
-            document.getElementById('gameContainer').classList.add('active');
-
+            showScreen('game');
             loadLevel(gameState.level);
         }
 
-        // --- LOAD LEVEL ---
         function loadLevel(levelNum) {
             const config = levels[levelNum - 1];
             if (!config) {
@@ -622,7 +932,6 @@
                 return;
             }
 
-            // Kill any leftover timers from the previous level
             stopTimer();
             clearTimeout(gameState.memoryTimeout);
 
@@ -631,12 +940,10 @@
             gameState.prepRequired = config.prep;
             gameState.memoryMode = config.memory;
             gameState.prepComplete = !config.prep;
-            gameState.orderVisible = true;
             gameState.selectedIngredient = null;
             gameState.targetCategory = null;
             gameState.currentOrder = [];
 
-            // Update UI
             document.getElementById('levelDisplay').textContent = levelNum;
             document.getElementById('levelName').textContent = config.name;
             document.getElementById('timer').textContent = gameState.timeLeft + 's';
@@ -644,46 +951,67 @@
             document.getElementById('memoryWarning').classList.remove('show');
             document.getElementById('monster').classList.remove('happy', 'impatient');
 
-            // Generate plate slots
             setupPlate(config.items);
 
-            // Prep levels: do the prep first, the plate order comes after
             const prepStation = document.getElementById('prepStation');
             if (config.prep) {
                 prepStation.classList.add('active');
                 startPrepPhase();
             } else {
                 prepStation.classList.remove('active');
+                pickPantrySet(config);
                 generateRegularOrder();
-                setupMainPantry(config);
+                buildPantry(gameState.pantrySet);
             }
 
-            // Start timer
             startTimer();
         }
 
-        // --- GENERATE ORDER ---
+        // Choose which items sit in the pantry; orders are drawn FROM this set
+        // so every order is always completable
+        function pickPantrySet(config) {
+            if (config.type === 'color') {
+                return; // handled after order generation (needs target category)
+            } else if (config.type === 'shape') {
+                return;
+            } else if (config.type === 'objects') {
+                gameState.pantrySet = shuffled(ingredients.objects).slice(0, 8);
+            } else {
+                gameState.pantrySet = shuffled(ingredients.food).slice(0, 8);
+            }
+        }
+
         function generateRegularOrder() {
             const config = levels[gameState.level - 1];
             let order = [];
 
-            if (config.type === 'exact') {
-                for (let i = 0; i < config.items; i++) {
-                    order.push(ingredients.exact[Math.floor(Math.random() * ingredients.exact.length)]);
-                }
-            } else if (config.type === 'color') {
+            if (config.type === 'color') {
                 const colors = Object.keys(ingredients.color);
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 gameState.targetCategory = color;
                 for (let i = 0; i < config.items; i++) {
                     order.push(ingredients.color[color][Math.floor(Math.random() * ingredients.color[color].length)]);
                 }
+                const others = shuffled(Object.keys(ingredients.color)
+                    .filter(c => c !== color)
+                    .flatMap(c => ingredients.color[c]));
+                gameState.pantrySet = shuffled([...ingredients.color[color], ...others.slice(0, 4)]);
             } else if (config.type === 'shape') {
                 const shapes = Object.keys(ingredients.shape);
                 const shape = shapes[Math.floor(Math.random() * shapes.length)];
                 gameState.targetCategory = shape;
                 for (let i = 0; i < config.items; i++) {
                     order.push(ingredients.shape[shape][Math.floor(Math.random() * ingredients.shape[shape].length)]);
+                }
+                const others = shuffled(Object.keys(ingredients.shape)
+                    .filter(s => s !== shape)
+                    .flatMap(s => ingredients.shape[s])
+                    .filter(e => !ingredients.shape[shape].includes(e)));
+                gameState.pantrySet = shuffled([...ingredients.shape[shape], ...others.slice(0, 4)]);
+            } else {
+                // exact / objects: draw the order from the pantry set
+                for (let i = 0; i < config.items; i++) {
+                    order.push(gameState.pantrySet[Math.floor(Math.random() * gameState.pantrySet.length)]);
                 }
             }
 
@@ -696,25 +1024,20 @@
                 gameState.memoryTimeout = setTimeout(() => {
                     hideOrder();
                     document.getElementById('memoryWarning').classList.remove('show');
-                }, 3000);
+                }, 4000);
             }
         }
 
-        // --- DISPLAY ORDER ---
         function displayOrder(order) {
             const container = document.getElementById('orderItems');
             container.innerHTML = order.map(item => `<span>${item}</span>`).join('');
             container.classList.remove('hidden');
-            gameState.orderVisible = true;
         }
 
         function hideOrder() {
-            const container = document.getElementById('orderItems');
-            container.classList.add('hidden');
-            gameState.orderVisible = false;
+            document.getElementById('orderItems').classList.add('hidden');
         }
 
-        // --- SETUP PLATE ---
         function setupPlate(numSlots) {
             const plate = document.getElementById('plate');
             plate.innerHTML = '';
@@ -736,7 +1059,6 @@
             });
         }
 
-        // --- SETUP PANTRY ---
         function buildPantry(emojis) {
             const pantry = document.getElementById('pantry');
             pantry.innerHTML = '';
@@ -754,34 +1076,6 @@
             });
         }
 
-        function setupMainPantry(config) {
-            let available;
-
-            if (config.type === 'color') {
-                // Everything from the target color, plus distractors from other colors
-                const target = ingredients.color[gameState.targetCategory];
-                const others = Object.keys(ingredients.color)
-                    .filter(c => c !== gameState.targetCategory)
-                    .flatMap(c => ingredients.color[c]);
-                others.sort(() => Math.random() - 0.5);
-                available = [...target, ...others.slice(0, 4)];
-            } else if (config.type === 'shape') {
-                const target = ingredients.shape[gameState.targetCategory];
-                const others = Object.keys(ingredients.shape)
-                    .filter(s => s !== gameState.targetCategory)
-                    .flatMap(s => ingredients.shape[s])
-                    .filter(e => !target.includes(e));
-                others.sort(() => Math.random() - 0.5);
-                available = [...target, ...others.slice(0, 4)];
-            } else {
-                // Exact levels: every ingredient the order can ask for must be here
-                available = [...ingredients.exact];
-            }
-
-            available.sort(() => Math.random() - 0.5);
-            buildPantry(available);
-        }
-
         // --- PREP PHASE ---
         function startPrepPhase() {
             const prepItems = Object.keys(ingredients.prep);
@@ -794,19 +1088,12 @@
             document.getElementById('prepInstructions').textContent = `Make ${selectedItem}! Tap: ${ingredients.prep[selectedItem].join(' ')}`;
             document.getElementById('prepBowl').textContent = '🥣';
 
-            // Order bubble shows the dish while prepping
             document.getElementById('orderItems').innerHTML = `<span>${selectedItem}</span>`;
             document.getElementById('orderItems').classList.remove('hidden');
 
-            // Pantry holds the recipe ingredients plus a few distractors
             const required = [...new Set(gameState.prepIngredients)];
-            const distractors = [...ingredients.exact]
-                .filter(e => !required.includes(e))
-                .sort(() => Math.random() - 0.5)
-                .slice(0, 4);
-            const pantryItems = [...required, ...distractors];
-            pantryItems.sort(() => Math.random() - 0.5);
-            buildPantry(pantryItems);
+            const distractors = shuffled(ingredients.food.filter(e => !required.includes(e))).slice(0, 4);
+            buildPantry(shuffled([...required, ...distractors]));
         }
 
         function handlePrepInput(emoji) {
@@ -827,7 +1114,6 @@
             vibrate(10);
 
             if (gameState.prepIngredients.length === 0) {
-                // Prep complete!
                 setTimeout(() => {
                     bowl.textContent = gameState.prepTarget;
                     gameState.prepComplete = true;
@@ -837,9 +1123,10 @@
                     createParticles(rect.left, rect.top);
                     document.getElementById('prepInstructions').textContent = `${gameState.prepTarget} ready! Now fill the plate!`;
 
-                    // Now the real order begins
+                    const config = levels[gameState.level - 1];
+                    pickPantrySet(config);
                     generateRegularOrder();
-                    setupMainPantry(levels[gameState.level - 1]);
+                    buildPantry(gameState.pantrySet);
                 }, 500);
             }
         }
@@ -850,7 +1137,6 @@
             const ingredient = e.currentTarget;
             const emoji = ingredient.dataset.emoji;
 
-            // During prep phase, taps feed the bowl
             if (gameState.prepRequired && !gameState.prepComplete) {
                 handlePrepInput(emoji);
                 return;
@@ -892,7 +1178,6 @@
                 document.removeEventListener('touchend', endHandler);
                 clone.remove();
 
-                // Check if dropped on plate
                 const clientX = ev.changedTouches ? ev.changedTouches[0].clientX : ev.clientX;
                 const clientY = ev.changedTouches ? ev.changedTouches[0].clientY : ev.clientY;
 
@@ -911,7 +1196,6 @@
             document.addEventListener('touchend', endHandler);
         }
 
-        // --- PLACE ON PLATE ---
         function placeOnPlate(emoji) {
             const emptyIndex = gameState.plateSlots.findIndex(s => s === null);
             if (emptyIndex === -1) return;
@@ -925,28 +1209,25 @@
             playSound('snap');
             vibrate(10);
 
-            // Check if plate is full
             if (!gameState.plateSlots.includes(null)) {
                 checkOrder();
             }
         }
 
-        // --- CHECK ORDER ---
         function checkOrder() {
             const config = levels[gameState.level - 1];
             let success = false;
 
-            if (config.type === 'exact') {
-                // Exact match, order on the plate doesn't matter
-                const sortedPlate = [...gameState.plateSlots].sort();
-                const sortedOrder = [...gameState.currentOrder].sort();
-                success = sortedPlate.every((v, i) => v === sortedOrder[i]);
-            } else if (config.type === 'color') {
+            if (config.type === 'color') {
                 const valid = ingredients.color[gameState.targetCategory];
                 success = gameState.plateSlots.every(item => valid.includes(item));
             } else if (config.type === 'shape') {
                 const valid = ingredients.shape[gameState.targetCategory];
                 success = gameState.plateSlots.every(item => valid.includes(item));
+            } else {
+                const sortedPlate = [...gameState.plateSlots].sort();
+                const sortedOrder = [...gameState.currentOrder].sort();
+                success = sortedPlate.every((v, i) => v === sortedOrder[i]);
             }
 
             if (success) {
@@ -954,23 +1235,20 @@
             } else {
                 playSound('wrong');
                 vibrate(50);
-                // Shake, then clear the plate so the kid can try again
                 const plate = document.getElementById('plate');
                 plate.style.animation = 'shake 0.5s';
                 setTimeout(() => {
                     plate.style.animation = '';
                     clearPlate();
-                    // In memory mode, show the order again briefly as a second chance
                     if (gameState.memoryMode) {
                         displayOrder(gameState.currentOrder);
                         clearTimeout(gameState.memoryTimeout);
-                        gameState.memoryTimeout = setTimeout(() => hideOrder(), 3000);
+                        gameState.memoryTimeout = setTimeout(() => hideOrder(), 4000);
                     }
                 }, 500);
             }
         }
 
-        // --- LEVEL COMPLETE ---
         function levelComplete(stars) {
             stopTimer();
             clearTimeout(gameState.memoryTimeout);
@@ -1000,20 +1278,18 @@
 
             overlay.classList.add('active');
 
-            // Save progress
             localStorage.setItem('monsterKitchenSave', JSON.stringify({
                 level: Math.min(gameState.level + 1, 12)
             }));
         }
 
-        // --- NEXT LEVEL ---
         function nextLevel() {
             document.getElementById('levelOverlay').classList.remove('active');
             document.getElementById('monster').classList.remove('happy', 'impatient');
-            loadLevel(gameState.level + 1);
+            // Math break between kitchen levels — P1-heavy rotation
+            startMathBreak(gameState.level + 1);
         }
 
-        // --- RETRY LEVEL ---
         function retryLevel() {
             document.getElementById('gameOverOverlay').classList.remove('active');
             document.getElementById('monster').classList.remove('happy', 'impatient');
@@ -1053,7 +1329,6 @@
             }, 1000);
         }
 
-        // --- GAME OVER ---
         function gameOver() {
             stopTimer();
             clearTimeout(gameState.memoryTimeout);
@@ -1064,7 +1339,6 @@
             document.getElementById('finalStars').textContent = '⭐';
         }
 
-        // --- PARTICLES ---
         function createParticles(x, y) {
             for (let i = 0; i < 10; i++) {
                 const particle = document.createElement('div');
@@ -1078,18 +1352,585 @@
             }
         }
 
-        // --- TAP-TO-PLACE (second input mode for little fingers) ---
         document.getElementById('plate').addEventListener('click', () => {
             if (!gameState.selectedIngredient) return;
             if (gameState.prepRequired && !gameState.prepComplete) return;
             placeOnPlate(gameState.selectedIngredient);
         });
 
-        // --- SAVE SYSTEM ---
-        window.addEventListener('beforeunload', () => {
-            localStorage.setItem('monsterKitchenSave', JSON.stringify({
-                level: gameState.level
+        // ============================================================
+        // MATH MODULE
+        // Built for one learner's profile:
+        //  P1 shapes: word->object mapping (cone<->sphere, cube<->cylinder
+        //     confusions), feedback names the defining property
+        //  P2 gap: "how many more / missing" taught as counting the gap
+        //  P3 add: count-on with fading scaffolds, off-by-one re-scaffolds
+        //  No timers, no lives; numbers stay 0-10; one-line prompts + audio
+        // ============================================================
+
+        const SHAPE_PROPS = {
+            sphere:   'Round all over. No flat side!',
+            cube:     '6 flat square sides, like a box!',
+            cone:     'Flat round base, comes to a point!',
+            cylinder: 'Two flat round ends, like a tube!'
+        };
+
+        const SHAPE_SVGS = {
+            sphere: `<svg viewBox="0 0 100 100"><circle cx="50" cy="52" r="38" fill="#64B5F6" stroke="#1565C0" stroke-width="4"/><ellipse cx="38" cy="38" rx="11" ry="7" fill="rgba(255,255,255,0.5)"/><circle cx="42" cy="50" r="4" fill="#333"/><circle cx="60" cy="50" r="4" fill="#333"/><path d="M44 64 Q51 71 58 64" stroke="#333" stroke-width="3" fill="none"/></svg>`,
+            cube: `<svg viewBox="0 0 100 100"><polygon points="25,35 65,35 65,75 25,75" fill="#FFB74D" stroke="#E65100" stroke-width="4"/><polygon points="25,35 40,20 80,20 65,35" fill="#FFA726" stroke="#E65100" stroke-width="4"/><polygon points="65,35 80,20 80,60 65,75" fill="#FB8C00" stroke="#E65100" stroke-width="4"/><circle cx="38" cy="50" r="4" fill="#333"/><circle cx="54" cy="50" r="4" fill="#333"/><path d="M40 62 Q46 67 52 62" stroke="#333" stroke-width="3" fill="none"/></svg>`,
+            cone: `<svg viewBox="0 0 100 100"><polygon points="50,10 22,75 78,75" fill="#BA68C8" stroke="#6A1B9A" stroke-width="4"/><ellipse cx="50" cy="76" rx="28" ry="9" fill="#AB47BC" stroke="#6A1B9A" stroke-width="4"/><circle cx="43" cy="55" r="4" fill="#333"/><circle cx="58" cy="55" r="4" fill="#333"/><path d="M44 66 Q50 70 56 66" stroke="#333" stroke-width="3" fill="none"/></svg>`,
+            cylinder: `<svg viewBox="0 0 100 100"><rect x="28" y="25" width="44" height="52" fill="#4DB6AC" stroke="#00695C" stroke-width="4"/><ellipse cx="50" cy="77" rx="22" ry="9" fill="#4DB6AC" stroke="#00695C" stroke-width="4"/><ellipse cx="50" cy="25" rx="22" ry="9" fill="#80CBC4" stroke="#00695C" stroke-width="4"/><circle cx="42" cy="48" r="4" fill="#333"/><circle cx="58" cy="48" r="4" fill="#333"/><path d="M43 61 Q50 66 57 61" stroke="#333" stroke-width="3" fill="none"/></svg>`
+        };
+
+        // band 1-2: her known anchors + confusion pairs (exam objects);
+        // band 3: all exam objects; band 4: transfer to unseen objects
+        const SHAPE_OBJECTS = [
+            { e: '🎲', name: 'dice',           s: 'cube',     band: 1 },
+            { e: '🥁', name: 'drum',           s: 'cylinder', band: 1 },
+            { e: '⚽', name: 'ball',           s: 'sphere',   band: 2 },
+            { e: '🎉', name: 'party hat',      s: 'cone',     band: 2 },
+            { e: '🔋', name: 'battery',        s: 'cylinder', band: 3 },
+            { e: '🎁', name: 'gift box',       s: 'cube',     band: 3 },
+            { e: '🍊', name: 'orange',         s: 'sphere',   band: 4 },
+            { e: '🥫', name: 'can',            s: 'cylinder', band: 4 },
+            { e: '🍦', name: 'ice cream cone', s: 'cone',     band: 4 },
+            { e: '📦', name: 'box',            s: 'cube',     band: 4 },
+            { e: '🏀', name: 'basketball',     s: 'sphere',   band: 4 },
+            { e: '🧊', name: 'ice cube',       s: 'cube',     band: 4 }
+        ];
+
+        const CONFUSION_PAIR = { sphere: 'cone', cone: 'sphere', cube: 'cylinder', cylinder: 'cube' };
+
+        // Persistent per-skill progress: band advances on roughly 4-of-5
+        let mathProgress = { shapes: { band: 1, att: 0, cor: 0 },
+                             gap:    { band: 1, att: 0, cor: 0 },
+                             add:    { band: 1, att: 0, cor: 0 } };
+        try {
+            const mp = JSON.parse(localStorage.getItem('monsterKitchenMath'));
+            if (mp && mp.shapes && mp.gap && mp.add) mathProgress = mp;
+        } catch(e) {}
+
+        function saveMathProgress() {
+            localStorage.setItem('monsterKitchenMath', JSON.stringify(mathProgress));
+        }
+
+        function recordAttempt(activity, ok) {
+            const p = mathProgress[activity];
+            p.att++;
+            if (ok) p.cor++;
+            if (p.att >= 5) {
+                if (p.cor >= 4 && p.band < 4) p.band++;
+                p.att = 0;
+                p.cor = 0;
+            }
+            saveMathProgress();
+        }
+
+        let mathSession = null;   // { activity, remaining, mode: 'break'|'practice', nextLvl, results[] }
+        let currentQ = null;
+
+        const MATH_TITLES = { shapes: '🟢 Shape Monsters', gap: '🧱 Gap Monsters', add: '🍪 Count On!' };
+
+        // Between-level rotation: shapes most often (P1), then gap (P2), then add (P3)
+        const BREAK_PLAN = ['shapes', 'gap', 'shapes', 'add', 'shapes', 'gap', 'shapes', 'add', 'gap', 'shapes', 'add'];
+
+        function openMathMenu() {
+            initAudio();
+            mathSession = null;
+            document.getElementById('mathTitle').textContent = 'Math Games';
+            document.getElementById('mathMenu').classList.add('active');
+            document.getElementById('mathQuiz').classList.remove('active');
+            showScreen('math');
+        }
+
+        function startMathPractice(activity) {
+            mathSession = { activity, remaining: 5, mode: 'practice', results: [] };
+            beginMathQuiz();
+        }
+
+        function startMathBreak(nextLvl) {
+            const activity = BREAK_PLAN[(nextLvl - 2) % BREAK_PLAN.length];
+            mathSession = { activity, remaining: 3, mode: 'break', nextLvl, results: [] };
+            showScreen('math');
+            beginMathQuiz();
+        }
+
+        function beginMathQuiz() {
+            document.getElementById('mathMenu').classList.remove('active');
+            document.getElementById('mathQuiz').classList.add('active');
+            document.getElementById('mathTitle').textContent = MATH_TITLES[mathSession.activity];
+            document.getElementById('mathBackBtn').textContent = mathSession.mode === 'break' ? '⏭️' : '🏠';
+            showScreen('math');
+            nextMathQuestion();
+        }
+
+        function mathBack() {
+            speechSynthesis && speechSynthesis.cancel();
+            if (mathSession && mathSession.mode === 'break') {
+                // Skip button during a break: go straight to the next level
+                finishMathSession(true);
+            } else if (document.getElementById('mathQuiz').classList.contains('active') && mathSession) {
+                openMathMenu();
+            } else {
+                showScreen('title');
+            }
+        }
+
+        function finishMathSession(skipped) {
+            const s = mathSession;
+            mathSession = null;
+            if (s && s.mode === 'break') {
+                showScreen('game');
+                loadLevel(s.nextLvl);
+            } else {
+                openMathMenu();
+            }
+        }
+
+        function updateDots() {
+            const dots = document.getElementById('mathDots');
+            if (!mathSession) { dots.innerHTML = ''; return; }
+            dots.innerHTML = mathSession.results.map(r => r ? '⭐' : '💛').join(' ');
+        }
+
+        function replayPrompt() {
+            if (currentQ) speak(currentQ.say);
+        }
+
+        function nextMathQuestion() {
+            if (!mathSession) return;
+            if (mathSession.remaining <= 0) {
+                const stars = mathSession.results.filter(r => r).length;
+                document.getElementById('mathPrompt').innerHTML = 'Great work!';
+                document.getElementById('mathVisual').innerHTML = '<div class="big-object">🎉</div>';
+                document.getElementById('mathAnswers').innerHTML = '';
+                document.getElementById('mathFeedback').textContent = '⭐'.repeat(Math.max(stars, 1));
+                document.getElementById('mathFeedback').className = 'math-feedback good';
+                playSound('fanfare');
+                speak('Great work!');
+                setTimeout(() => finishMathSession(false), 1800);
+                return;
+            }
+
+            const gen = { shapes: genShapeQ, gap: genGapQ, add: genAddQ }[mathSession.activity];
+            currentQ = gen(mathProgress[mathSession.activity].band);
+            currentQ.firstTry = true;
+            renderQuestion(currentQ);
+            speak(currentQ.say);
+        }
+
+        function renderQuestion(q) {
+            updateDots();
+            document.getElementById('mathPrompt').innerHTML = q.prompt;
+            document.getElementById('mathVisual').innerHTML = q.visual;
+            document.getElementById('mathFeedback').textContent = '';
+            document.getElementById('mathFeedback').className = 'math-feedback';
+
+            const answers = document.getElementById('mathAnswers');
+            answers.innerHTML = '';
+            answers.dataset.correct = q.correct;
+            q.answers.forEach(a => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn' + (a.shape ? ' shape-btn' : '');
+                btn.innerHTML = a.html;
+                btn.dataset.value = a.value;
+                btn.onclick = () => answerMath(btn, a.value);
+                answers.appendChild(btn);
+            });
+        }
+
+        function answerMath(btn, value) {
+            if (!currentQ || !mathSession) return;
+            const q = currentQ;
+            const fb = document.getElementById('mathFeedback');
+
+            if (String(value) === String(q.correct)) {
+                const wasFirstTry = q.firstTry;
+                recordAttempt(mathSession.activity, wasFirstTry);
+                mathSession.results.push(wasFirstTry);
+                mathSession.remaining--;
+                currentQ = null;
+
+                fb.innerHTML = q.explain;
+                fb.className = 'math-feedback good';
+                playSound('correct');
+                vibrate([10, 50, 10]);
+                speak(q.explainSay || q.explain.replace(/<[^>]*>/g, ''));
+                const rect = btn.getBoundingClientRect();
+                createParticles(rect.left + rect.width / 2, rect.top);
+                if (q.onCorrectVisual) q.onCorrectVisual();
+                setTimeout(nextMathQuestion, 2200);
+            } else {
+                // Never punish: explain WHY with the concrete model, let her retry
+                q.firstTry = false;
+                btn.classList.add('wrong-flash');
+                setTimeout(() => btn.classList.remove('wrong-flash'), 450);
+                playSound('wrong');
+                vibrate(50);
+                const hint = q.hint(value);
+                fb.innerHTML = hint.text;
+                fb.className = 'math-feedback hint';
+                speak(hint.say || hint.text.replace(/<[^>]*>/g, ''));
+                if (hint.reScaffold) {
+                    document.getElementById('mathVisual').innerHTML = hint.reScaffold;
+                }
+            }
+        }
+
+        // ---------- P1: SHAPES ----------
+        function shapeButtons(shapeNames) {
+            return shapeNames.map(s => ({
+                html: SHAPE_SVGS[s] + `<span>${s}</span>`,
+                value: s,
+                shape: true
             }));
+        }
+
+        function genShapeQ(band) {
+            let pool, choices;
+            if (band === 1) {
+                pool = SHAPE_OBJECTS.filter(o => o.band === 1);
+            } else if (band === 2) {
+                pool = SHAPE_OBJECTS.filter(o => o.band <= 2);
+            } else if (band === 3) {
+                pool = SHAPE_OBJECTS.filter(o => o.band <= 3);
+            } else {
+                pool = SHAPE_OBJECTS.filter(o => o.band >= 3);
+            }
+            const obj = pool[Math.floor(Math.random() * pool.length)];
+
+            if (band <= 2) {
+                // two choices: the correct shape and its confusion partner
+                choices = shuffled([obj.s, CONFUSION_PAIR[obj.s]]);
+            } else {
+                choices = shuffled(['sphere', 'cube', 'cone', 'cylinder']);
+            }
+
+            const article = obj.name === 'dice' ? '' : 'a ';
+            return {
+                prompt: `What <b class="kw">SHAPE</b> is this?`,
+                say: `What shape is ${article}${obj.name}?`,
+                visual: `<div class="big-object">${obj.e}</div>`,
+                answers: shapeButtons(choices),
+                correct: obj.s,
+                explain: `Yes! ${obj.name} is a <b class="kw">${obj.s.toUpperCase()}</b>. ${SHAPE_PROPS[obj.s]}`,
+                explainSay: `Yes! A ${obj.name} is a ${obj.s}. ${SHAPE_PROPS[obj.s]}`,
+                hint: () => ({
+                    text: `Look! ${SHAPE_PROPS[obj.s]} Try again!`,
+                    say: `Look at it. ${SHAPE_PROPS[obj.s]} Try again!`
+                })
+            };
+        }
+
+        // ---------- P2: GAP / DIFFERENCE ----------
+        function towerHTML(count, color, label, ghostExtra = 0, flashGhost = false) {
+            let blocks = '';
+            for (let i = 0; i < count; i++) {
+                blocks += `<div class="block" style="background:${color}"></div>`;
+            }
+            for (let i = 0; i < ghostExtra; i++) {
+                blocks += `<div class="block ghost${flashGhost ? ' flash' : ''}"></div>`;
+            }
+            return `<div><div class="tower">${blocks}</div><div class="tower-label" style="color:${color}">${label}</div></div>`;
+        }
+
+        function numberButtons(from, to) {
+            const btns = [];
+            for (let n = from; n <= to; n++) {
+                btns.push({ html: String(n), value: n });
+            }
+            return btns;
+        }
+
+        function genGapQ(band) {
+            if (band <= 2) {
+                // Two towers, count the gap. Alternate MORE / MISSING phrasing
+                // so both wordings attach to the same idea.
+                const maxGap = band === 1 ? 2 : 4;
+                const gap = 1 + Math.floor(Math.random() * maxGap);
+                const small = 1 + Math.floor(Math.random() * (9 - maxGap));
+                const big = small + gap;
+                const asMore = Math.random() < 0.5;
+                const prompt = asMore
+                    ? `How many <b class="kw">MORE</b> red?`
+                    : `How many blue are <b class="kw">MISSING</b>?`;
+                const say = asMore
+                    ? `The red tower is taller. How many MORE red blocks?`
+                    : `How many blue blocks are MISSING to make them the same?`;
+                return {
+                    prompt, say,
+                    visual: towerHTML(big, '#e53935', big) + towerHTML(small, '#1e88e5', small, gap),
+                    answers: numberButtons(0, Math.min(maxGap + 2, 6)),
+                    correct: gap,
+                    explain: `Yes! <b class="kw">${gap}</b> more makes them the same!`,
+                    explainSay: `Yes! ${gap} more blocks make them the same!`,
+                    hint: (v) => ({
+                        text: v === big
+                            ? `${big} is the WHOLE tower. Count only the <b class="kw">GAP</b> — the dashed blocks!`
+                            : `Count the dashed blocks — that is the <b class="kw">GAP</b>!`,
+                        say: v === big
+                            ? `That is the whole tower. Count only the gap. The dashed blocks!`
+                            : `Count the dashed blocks. That is the gap!`,
+                        reScaffold: towerHTML(big, '#e53935', big) + towerHTML(small, '#1e88e5', small, gap, true)
+                    })
+                };
+            } else if (band === 3) {
+                // 3 + ? = 7 with tower support — her exact exam miss
+                const total = 5 + Math.floor(Math.random() * 5);          // 5..9
+                const start = 1 + Math.floor(Math.random() * (total - 2)); // 1..total-1
+                const gap = total - start;
+                return {
+                    prompt: `<span class="num-sentence">${start} + <span class="blank">?</span> = ${total}</span>`,
+                    say: `${start} plus what makes ${total}?`,
+                    visual: towerHTML(start, '#43a047', start, gap) + towerHTML(total, '#FB8C00', total),
+                    answers: numberButtons(0, 9),
+                    correct: gap,
+                    explain: `Yes! ${start} + <b class="kw">${gap}</b> = ${total}!`,
+                    explainSay: `Yes! ${start} plus ${gap} makes ${total}!`,
+                    hint: (v) => ({
+                        text: v === start + total
+                            ? `Don't add them! Find what <b class="kw">FILLS THE GAP</b> to ${total}. Count the dashed blocks!`
+                            : `Start at ${start}, count UP to ${total}. The dashed blocks show the gap!`,
+                        say: v === start + total
+                            ? `Don't add those two numbers. Find what fills the gap. Count the dashed blocks!`
+                            : `Start at ${start} and count up to ${total}. Count the dashed blocks!`,
+                        reScaffold: towerHTML(start, '#43a047', start, gap, true) + towerHTML(total, '#FB8C00', total)
+                    })
+                };
+            } else {
+                // "How many MORE" from a mini pictograph (1 picture = 1 item)
+                const days = shuffled(['Monday', 'Tuesday', 'Wednesday', 'Thursday']).slice(0, 2);
+                const a = 2 + Math.floor(Math.random() * 4);  // 2..5
+                let b = 1 + Math.floor(Math.random() * (a - 1)); // 1..a-1
+                const gap = a - b;
+                const row = (day, n) => `<div class="picto-row"><span class="picto-day">${day}</span><span>${'🍦'.repeat(n)}</span></div>`;
+                return {
+                    prompt: `How many <b class="kw">MORE</b> on ${days[0]}?`,
+                    say: `How many MORE ice creams on ${days[0]} than ${days[1]}?`,
+                    visual: `<div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start;">${row(days[0], a)}${row(days[1], b)}</div>`,
+                    answers: numberButtons(0, 6),
+                    correct: gap,
+                    explain: `Yes! ${a} is <b class="kw">${gap}</b> more than ${b}!`,
+                    explainSay: `Yes! ${a} is ${gap} more than ${b}!`,
+                    hint: (v) => ({
+                        text: v === a
+                            ? `${a} is how many ${days[0]} has. Match them up — count the <b class="kw">EXTRA</b> ones!`
+                            : `Match them one to one. Count the <b class="kw">EXTRA</b> ice creams!`,
+                        say: v === a
+                            ? `${a} is the whole row. Match them up and count only the extra ones!`
+                            : `Match them one to one, then count the extra ice creams!`
+                    })
+                };
+            }
+        }
+
+        // ---------- P3: ADDITION / COUNT ON ----------
+        function groupHTML(n, emoji) {
+            return `<div class="count-group">${(emoji + ' ').repeat(n).trim().split(' ').map(e => `<span>${e}</span>`).join('')}</div>`;
+        }
+
+        function genAddQ(band) {
+            let a, b;
+            if (band === 1) {
+                a = 1 + Math.floor(Math.random() * 4);           // totals to 6
+                b = 1 + Math.floor(Math.random() * Math.min(5 - a, 4)) || 1;
+                if (a + b > 6) b = 6 - a;
+            } else {
+                a = 2 + Math.floor(Math.random() * 6);           // totals to 10
+                b = 1 + Math.floor(Math.random() * Math.min(10 - a, 5));
+            }
+            if (b < 1) b = 1;
+            const total = a + b;
+            const emoji = ['🍪', '🧁', '🍓', '👾'][Math.floor(Math.random() * 4)];
+
+            const bothVisible = groupHTML(a, emoji) + `<div class="plus-sign">+</div>` + groupHTML(b, emoji);
+            const hiddenFirst = `<div class="rock-badge">🪨 <b>${a}</b></div><div class="plus-sign">+</div>` + groupHTML(b, emoji);
+            const numeralsOnly = `<div class="num-sentence">${a} + ${b} = <span class="blank">?</span></div>`;
+
+            let visual, prompt, say;
+            if (band <= 2) {
+                visual = bothVisible;
+                prompt = `How many in <b class="kw">ALL</b>?`;
+                say = `${a} and ${b}. How many in all?`;
+            } else if (band === 3) {
+                visual = hiddenFirst;
+                prompt = `<b class="kw">COUNT ON</b> from ${a}!`;
+                say = `${a} are hiding under the rock. Count on! ${a}, then ${b} more.`;
+            } else {
+                visual = numeralsOnly;
+                prompt = `${a} + ${b} = <b class="kw">?</b>`;
+                say = `What is ${a} plus ${b}?`;
+            }
+
+            return {
+                prompt, say, visual,
+                answers: numberButtons(Math.max(0, total - 3), Math.min(10, total + 3)),
+                correct: total,
+                explain: `Yes! ${a} + ${b} = <b class="kw">${total}</b>!`,
+                explainSay: `Yes! ${a} plus ${b} is ${total}!`,
+                hint: (v) => {
+                    // Off-by-one is the count-on slip: re-scaffold with
+                    // everything visible instead of pushing harder
+                    if (Math.abs(v - total) === 1) {
+                        const countOnWords = Array.from({length: b}, (_, i) => a + i + 1).join(', ');
+                        return {
+                            text: `So close! Say <b class="kw">${a}</b>… then ${countOnWords}!`,
+                            say: `So close! Say ${a} first, then count on: ${countOnWords}!`,
+                            reScaffold: bothVisible
+                        };
+                    }
+                    return {
+                        text: `Count them all! Start at <b class="kw">${a}</b>, then count on!`,
+                        say: `Count them all. Start at ${a}, then count on!`,
+                        reScaffold: bothVisible
+                    };
+                }
+            };
+        }
+
+        // ============================================================
+        // COLORING MODULE
+        // ============================================================
+        const PALETTE = ['#e53935', '#fb8c00', '#fdd835', '#43a047', '#1e88e5', '#8e24aa',
+                         '#ec407a', '#6d4c41', '#26c6da', '#ffd700', '#9ccc65', '#212121'];
+        let selectedColor = PALETTE[0];
+        let currentPicture = 'monster';
+
+        let coloringSave = {};
+        try { coloringSave = JSON.parse(localStorage.getItem('monsterKitchenColoring')) || {}; } catch(e) {}
+
+        // Each picture: white paintable regions with data-r ids; faces/outlines fixed
+        const PICTURES = {
+            monster: `
+              <svg viewBox="0 0 400 400">
+                <rect x="0" y="0" width="400" height="400" fill="#fff"/>
+                <ellipse class="paintable" data-r="hatTop" cx="200" cy="70" rx="70" ry="38" fill="#fff" stroke="#333" stroke-width="4"/>
+                <rect class="paintable" data-r="hatBand" x="140" y="90" width="120" height="28" rx="10" fill="#fff" stroke="#333" stroke-width="4"/>
+                <circle class="paintable" data-r="earL" cx="105" cy="150" r="22" fill="#fff" stroke="#333" stroke-width="4"/>
+                <circle class="paintable" data-r="earR" cx="295" cy="150" r="22" fill="#fff" stroke="#333" stroke-width="4"/>
+                <ellipse class="paintable" data-r="head" cx="200" cy="185" rx="85" ry="70" fill="#fff" stroke="#333" stroke-width="4"/>
+                <circle cx="170" cy="170" r="13" fill="#fff" stroke="#333" stroke-width="3"/>
+                <circle cx="230" cy="170" r="13" fill="#fff" stroke="#333" stroke-width="3"/>
+                <circle cx="173" cy="172" r="6" fill="#333"/>
+                <circle cx="233" cy="172" r="6" fill="#333"/>
+                <path class="paintable" data-r="mouth" d="M170 210 Q200 240 230 210 Q215 225 200 224 Q185 225 170 210 Z" fill="#fff" stroke="#333" stroke-width="4"/>
+                <ellipse class="paintable" data-r="body" cx="200" cy="310" rx="75" ry="58" fill="#fff" stroke="#333" stroke-width="4"/>
+                <ellipse class="paintable" data-r="armL" cx="112" cy="290" rx="22" ry="38" fill="#fff" stroke="#333" stroke-width="4" transform="rotate(20 112 290)"/>
+                <ellipse class="paintable" data-r="armR" cx="288" cy="290" rx="22" ry="38" fill="#fff" stroke="#333" stroke-width="4" transform="rotate(-20 288 290)"/>
+                <rect class="paintable" data-r="spoon" x="316" y="230" width="14" height="70" rx="7" fill="#fff" stroke="#333" stroke-width="4" transform="rotate(-15 323 265)"/>
+                <ellipse class="paintable" data-r="spoonTop" cx="335" cy="222" rx="18" ry="24" fill="#fff" stroke="#333" stroke-width="4" transform="rotate(-15 335 222)"/>
+                <ellipse class="paintable" data-r="apple" cx="90" cy="365" rx="26" ry="24" fill="#fff" stroke="#333" stroke-width="4"/>
+                <path d="M90 341 Q95 330 104 332" fill="none" stroke="#333" stroke-width="4"/>
+              </svg>`,
+            shapes: `
+              <svg viewBox="0 0 400 400">
+                <rect x="0" y="0" width="400" height="400" fill="#fff"/>
+                <circle class="paintable" data-r="sphere" cx="105" cy="100" r="62" fill="#fff" stroke="#333" stroke-width="4"/>
+                <circle cx="88" cy="92" r="6" fill="#333"/><circle cx="122" cy="92" r="6" fill="#333"/>
+                <path d="M90 115 Q105 128 120 115" stroke="#333" stroke-width="4" fill="none"/>
+                <text x="105" y="192" text-anchor="middle" font-size="24" fill="#333" font-family="inherit">sphere</text>
+                <polygon class="paintable" data-r="cubeFront" points="240,70 330,70 330,160 240,160" fill="#fff" stroke="#333" stroke-width="4"/>
+                <polygon class="paintable" data-r="cubeTop" points="240,70 268,42 358,42 330,70" fill="#fff" stroke="#333" stroke-width="4"/>
+                <polygon class="paintable" data-r="cubeSide" points="330,70 358,42 358,132 330,160" fill="#fff" stroke="#333" stroke-width="4"/>
+                <circle cx="268" cy="105" r="6" fill="#333"/><circle cx="302" cy="105" r="6" fill="#333"/>
+                <path d="M272 130 Q285 140 298 130" stroke="#333" stroke-width="4" fill="none"/>
+                <text x="295" y="192" text-anchor="middle" font-size="24" fill="#333" font-family="inherit">cube</text>
+                <polygon class="paintable" data-r="cone" points="105,215 55,340 155,340" fill="#fff" stroke="#333" stroke-width="4"/>
+                <ellipse class="paintable" data-r="coneBase" cx="105" cy="341" rx="50" ry="15" fill="#fff" stroke="#333" stroke-width="4"/>
+                <circle cx="93" cy="300" r="6" fill="#333"/><circle cx="117" cy="300" r="6" fill="#333"/>
+                <path d="M95 318 Q105 326 115 318" stroke="#333" stroke-width="4" fill="none"/>
+                <text x="105" y="388" text-anchor="middle" font-size="24" fill="#333" font-family="inherit">cone</text>
+                <rect class="paintable" data-r="cylBody" x="250" y="230" width="90" height="105" fill="#fff" stroke="#333" stroke-width="4"/>
+                <ellipse class="paintable" data-r="cylBottom" cx="295" cy="336" rx="45" ry="16" fill="#fff" stroke="#333" stroke-width="4"/>
+                <ellipse class="paintable" data-r="cylTop" cx="295" cy="230" rx="45" ry="16" fill="#fff" stroke="#333" stroke-width="4"/>
+                <circle cx="278" cy="280" r="6" fill="#333"/><circle cx="312" cy="280" r="6" fill="#333"/>
+                <path d="M280 302 Q295 312 310 302" stroke="#333" stroke-width="4" fill="none"/>
+                <text x="295" y="388" text-anchor="middle" font-size="24" fill="#333" font-family="inherit">cylinder</text>
+              </svg>`,
+            icecream: `
+              <svg viewBox="0 0 400 400">
+                <rect x="0" y="0" width="400" height="400" fill="#fff"/>
+                <circle class="paintable" data-r="sun" cx="330" cy="70" r="40" fill="#fff" stroke="#333" stroke-width="4"/>
+                <polygon class="paintable" data-r="cone" points="200,385 140,230 260,230" fill="#fff" stroke="#333" stroke-width="4"/>
+                <path d="M155 268 L245 268 M168 305 L232 305 M182 342 L218 342" stroke="#333" stroke-width="3"/>
+                <ellipse class="paintable" data-r="scoopBottom" cx="200" cy="200" rx="72" ry="48" fill="#fff" stroke="#333" stroke-width="4"/>
+                <ellipse class="paintable" data-r="scoopTop" cx="200" cy="130" rx="58" ry="42" fill="#fff" stroke="#333" stroke-width="4"/>
+                <circle class="paintable" data-r="cherry" cx="200" cy="78" r="18" fill="#fff" stroke="#333" stroke-width="4"/>
+                <path d="M200 60 Q206 44 218 40" fill="none" stroke="#333" stroke-width="4"/>
+              </svg>`
+        };
+
+        function openColoring() {
+            initAudio();
+            buildPaletteUI();
+            renderPicture();
+            showScreen('color');
+        }
+
+        function closeColoring() {
+            showScreen('title');
+        }
+
+        function buildPaletteUI() {
+            const pal = document.getElementById('palette');
+            if (pal.children.length) return;
+            PALETTE.forEach((c, i) => {
+                const sw = document.createElement('div');
+                sw.className = 'swatch' + (i === 0 ? ' selected' : '');
+                sw.style.background = c;
+                sw.dataset.color = c;
+                sw.onclick = () => {
+                    selectedColor = c;
+                    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected'));
+                    sw.classList.add('selected');
+                    playSound('pop');
+                };
+                pal.appendChild(sw);
+            });
+        }
+
+        function renderPicture() {
+            const canvas = document.getElementById('colorCanvas');
+            canvas.innerHTML = PICTURES[currentPicture];
+            const saved = coloringSave[currentPicture] || {};
+            canvas.querySelectorAll('.paintable').forEach(el => {
+                if (saved[el.dataset.r]) el.setAttribute('fill', saved[el.dataset.r]);
+                el.addEventListener('click', () => {
+                    el.setAttribute('fill', selectedColor);
+                    if (!coloringSave[currentPicture]) coloringSave[currentPicture] = {};
+                    coloringSave[currentPicture][el.dataset.r] = selectedColor;
+                    localStorage.setItem('monsterKitchenColoring', JSON.stringify(coloringSave));
+                    playSound('snap');
+                    vibrate(10);
+                });
+            });
+        }
+
+        function switchPicture(pic) {
+            currentPicture = pic;
+            document.querySelectorAll('.pic-tab').forEach(t => t.classList.toggle('active', t.dataset.pic === pic));
+            renderPicture();
+            playSound('pop');
+        }
+
+        function resetPicture() {
+            delete coloringSave[currentPicture];
+            localStorage.setItem('monsterKitchenColoring', JSON.stringify(coloringSave));
+            renderPicture();
+            playSound('pop');
+        }
+
+        // ============================================================
+        // SAVE SYSTEM
+        // ============================================================
+        window.addEventListener('beforeunload', () => {
+            // Only save if a kitchen session actually ran this visit —
+            // a coloring-only visit must not overwrite saved progress
+            if (gameState.kitchenStarted) {
+                localStorage.setItem('monsterKitchenSave', JSON.stringify({
+                    level: gameState.level
+                }));
+            }
         });
     </script>
 </body>
