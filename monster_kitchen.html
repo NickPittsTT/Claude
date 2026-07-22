@@ -524,20 +524,64 @@
         .math-feedback.hint { color: #FFB74D; }
         .math-dots { display: flex; gap: 8px; font-size: clamp(20px, 4vw, 30px); min-height: 1.2em; }
 
+        /* Word Watch: two big picture choices */
+        .answer-btn.pick-btn {
+            min-width: clamp(130px, 26vw, 210px);
+            min-height: clamp(100px, 18vw, 150px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: linear-gradient(180deg, #7E57C2 0%, #5E35B1 100%);
+            border-color: #4527A0;
+            box-shadow: 0 5px 0 #4527A0;
+        }
+        .len-bar { height: 16px; border-radius: 8px; background: #FFD700; }
+        .pick-group { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; max-width: clamp(120px, 22vw, 180px); font-size: clamp(24px, 4.5vw, 36px); }
+
+        /* Money Monsters: TT-style notes */
+        .note-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .note {
+            width: clamp(84px, 16vw, 120px);
+            height: clamp(42px, 8vw, 60px);
+            border-radius: 8px;
+            border: 3px solid rgba(0,0,0,0.4);
+            color: #fff;
+            font-weight: bold;
+            font-family: inherit;
+            font-size: clamp(20px, 4vw, 30px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .note.five { background: linear-gradient(180deg, #66BB6A 0%, #2E7D32 100%); }
+        .note.one { background: linear-gradient(180deg, #EF5350 0%, #C62828 100%); }
+        .note.selected { outline: 5px solid #FFD700; transform: translateY(-6px); }
+        .money-total { font-size: clamp(28px, 5.5vw, 44px); font-weight: bold; color: #FFD700; min-height: 1.3em; }
+        .month-path { font-size: clamp(16px, 3vw, 24px); max-width: 90%; text-align: center; line-height: 1.6; }
+
         /* Math menu picker */
         .math-menu {
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 14px;
             flex: 1;
+            overflow-y: auto;
+            padding: 15px 0;
         }
         .math-menu.active { display: flex; }
-        .math-menu .menu-btn { min-width: clamp(240px, 50vw, 380px); }
+        .math-menu .menu-btn { min-width: clamp(240px, 50vw, 380px); flex-shrink: 0; }
         .math-menu .menu-btn.shapes { background: linear-gradient(180deg, #66BB6A, #43A047); border: 4px solid #2E7D32; box-shadow: 0 5px 0 #2E7D32; }
         .math-menu .menu-btn.gap { background: linear-gradient(180deg, #EF5350, #E53935); border: 4px solid #B71C1C; box-shadow: 0 5px 0 #B71C1C; }
         .math-menu .menu-btn.add { background: linear-gradient(180deg, #FFA726, #FB8C00); border: 4px solid #E65100; box-shadow: 0 5px 0 #E65100; }
+        .math-menu .menu-btn.money { background: linear-gradient(180deg, #26A69A, #00897B); border: 4px solid #00695C; box-shadow: 0 5px 0 #00695C; }
+        .math-menu .menu-btn.words { background: linear-gradient(180deg, #7E57C2, #5E35B1); border: 4px solid #4527A0; box-shadow: 0 5px 0 #4527A0; }
+        .math-menu .menu-btn.months { background: linear-gradient(180deg, #EC407A, #D81B60); border: 4px solid #AD1457; box-shadow: 0 5px 0 #AD1457; }
         .math-quiz { display: none; flex-direction: column; flex: 1; }
         .math-quiz.active { display: flex; }
 
@@ -689,6 +733,9 @@
             <button class="menu-btn shapes" onclick="startMathPractice('shapes')">🟢 Shape Monsters</button>
             <button class="menu-btn gap" onclick="startMathPractice('gap')">🧱 Gap Monsters</button>
             <button class="menu-btn add" onclick="startMathPractice('add')">🍪 Count On!</button>
+            <button class="menu-btn money" onclick="startMathPractice('money')">💵 Money Monsters</button>
+            <button class="menu-btn words" onclick="startMathPractice('words')">🔍 Word Watch</button>
+            <button class="menu-btn months" onclick="startMathPractice('months')">📅 Month March</button>
         </div>
 
         <!-- Question area -->
@@ -1402,13 +1449,14 @@
         const CONFUSION_PAIR = { sphere: 'cone', cone: 'sphere', cube: 'cylinder', cylinder: 'cube' };
 
         // Persistent per-skill progress: band advances on roughly 4-of-5
-        let mathProgress = { shapes: { band: 1, att: 0, cor: 0 },
-                             gap:    { band: 1, att: 0, cor: 0 },
-                             add:    { band: 1, att: 0, cor: 0 } };
+        const MATH_SKILLS = ['shapes', 'gap', 'add', 'money', 'words', 'months'];
+        let mathProgress = {};
         try {
-            const mp = JSON.parse(localStorage.getItem('monsterKitchenMath'));
-            if (mp && mp.shapes && mp.gap && mp.add) mathProgress = mp;
-        } catch(e) {}
+            mathProgress = JSON.parse(localStorage.getItem('monsterKitchenMath')) || {};
+        } catch(e) { mathProgress = {}; }
+        MATH_SKILLS.forEach(k => {
+            if (!mathProgress[k]) mathProgress[k] = { band: 1, att: 0, cor: 0 };
+        });
 
         function saveMathProgress() {
             localStorage.setItem('monsterKitchenMath', JSON.stringify(mathProgress));
@@ -1429,10 +1477,12 @@
         let mathSession = null;   // { activity, remaining, mode: 'break'|'practice', nextLvl, results[] }
         let currentQ = null;
 
-        const MATH_TITLES = { shapes: '🟢 Shape Monsters', gap: '🧱 Gap Monsters', add: '🍪 Count On!' };
+        const MATH_TITLES = { shapes: '🟢 Shape Monsters', gap: '🧱 Gap Monsters', add: '🍪 Count On!',
+                              money: '💵 Money Monsters', words: '🔍 Word Watch', months: '📅 Month March' };
 
-        // Between-level rotation: shapes most often (P1), then gap (P2), then add (P3)
-        const BREAK_PLAN = ['shapes', 'gap', 'shapes', 'add', 'shapes', 'gap', 'shapes', 'add', 'gap', 'shapes', 'add'];
+        // Between-level rotation: shapes most often (P1), then gap (P2),
+        // then the confirmed exam gaps: money, question words, months
+        const BREAK_PLAN = ['shapes', 'gap', 'money', 'shapes', 'words', 'add', 'gap', 'months', 'shapes', 'money', 'words'];
 
         function openMathMenu() {
             initAudio();
@@ -1512,7 +1562,8 @@
                 return;
             }
 
-            const gen = { shapes: genShapeQ, gap: genGapQ, add: genAddQ }[mathSession.activity];
+            const gen = { shapes: genShapeQ, gap: genGapQ, add: genAddQ,
+                          money: genMoneyQ, words: genWordsQ, months: genMonthsQ }[mathSession.activity];
             currentQ = gen(mathProgress[mathSession.activity].band);
             currentQ.firstTry = true;
             renderQuestion(currentQ);
@@ -1529,9 +1580,15 @@
             const answers = document.getElementById('mathAnswers');
             answers.innerHTML = '';
             answers.dataset.correct = q.correct;
+
+            if (q.customAnswers) {
+                q.customAnswers(answers);
+                return;
+            }
+
             q.answers.forEach(a => {
                 const btn = document.createElement('button');
-                btn.className = 'answer-btn' + (a.shape ? ' shape-btn' : '');
+                btn.className = 'answer-btn' + (a.shape ? ' shape-btn' : '') + (a.pick ? ' pick-btn' : '');
                 btn.innerHTML = a.html;
                 btn.dataset.value = a.value;
                 btn.onclick = () => answerMath(btn, a.value);
@@ -1539,41 +1596,52 @@
             });
         }
 
+        const stripTags = h => String(h).replace(/<[^>]*>/g, '');
+
+        function mathSuccess(q, anchorEl) {
+            const wasFirstTry = q.firstTry;
+            recordAttempt(mathSession.activity, wasFirstTry);
+            mathSession.results.push(wasFirstTry);
+            mathSession.remaining--;
+            currentQ = null;
+
+            const fb = document.getElementById('mathFeedback');
+            fb.innerHTML = q.explain;
+            fb.className = 'math-feedback good';
+            playSound('correct');
+            vibrate([10, 50, 10]);
+            speak(q.explainSay || stripTags(q.explain));
+            if (anchorEl) {
+                const rect = anchorEl.getBoundingClientRect();
+                createParticles(rect.left + rect.width / 2, rect.top);
+            }
+            setTimeout(nextMathQuestion, 2200);
+        }
+
+        // Never punish: explain WHY with the concrete model, let her retry
+        function mathWrong(q, hint, btnEl) {
+            q.firstTry = false;
+            if (btnEl) {
+                btnEl.classList.add('wrong-flash');
+                setTimeout(() => btnEl.classList.remove('wrong-flash'), 450);
+            }
+            playSound('wrong');
+            vibrate(50);
+            const fb = document.getElementById('mathFeedback');
+            fb.innerHTML = hint.text;
+            fb.className = 'math-feedback hint';
+            speak(hint.say || stripTags(hint.text));
+            if (hint.reScaffold) {
+                document.getElementById('mathVisual').innerHTML = hint.reScaffold;
+            }
+        }
+
         function answerMath(btn, value) {
             if (!currentQ || !mathSession) return;
-            const q = currentQ;
-            const fb = document.getElementById('mathFeedback');
-
-            if (String(value) === String(q.correct)) {
-                const wasFirstTry = q.firstTry;
-                recordAttempt(mathSession.activity, wasFirstTry);
-                mathSession.results.push(wasFirstTry);
-                mathSession.remaining--;
-                currentQ = null;
-
-                fb.innerHTML = q.explain;
-                fb.className = 'math-feedback good';
-                playSound('correct');
-                vibrate([10, 50, 10]);
-                speak(q.explainSay || q.explain.replace(/<[^>]*>/g, ''));
-                const rect = btn.getBoundingClientRect();
-                createParticles(rect.left + rect.width / 2, rect.top);
-                if (q.onCorrectVisual) q.onCorrectVisual();
-                setTimeout(nextMathQuestion, 2200);
+            if (String(value) === String(currentQ.correct)) {
+                mathSuccess(currentQ, btn);
             } else {
-                // Never punish: explain WHY with the concrete model, let her retry
-                q.firstTry = false;
-                btn.classList.add('wrong-flash');
-                setTimeout(() => btn.classList.remove('wrong-flash'), 450);
-                playSound('wrong');
-                vibrate(50);
-                const hint = q.hint(value);
-                fb.innerHTML = hint.text;
-                fb.className = 'math-feedback hint';
-                speak(hint.say || hint.text.replace(/<[^>]*>/g, ''));
-                if (hint.reScaffold) {
-                    document.getElementById('mathVisual').innerHTML = hint.reScaffold;
-                }
+                mathWrong(currentQ, currentQ.hint(value), btn);
             }
         }
 
@@ -1785,6 +1853,225 @@
                         reScaffold: bothVisible
                     };
                 }
+            };
+        }
+
+        // ---------- MONEY (exam Q8: she circled far more than the target;
+        // teach counting notes, then stopping EXACTLY at the target) ----------
+        function noteHTML(value) {
+            return `<div class="note ${value === 5 ? 'five' : 'one'}">$${value}</div>`;
+        }
+
+        function genMoneyQ(band) {
+            if (band === 1 || (band === 4 && Math.random() < 0.5)) {
+                // Count the money: TT notes are $5 (green) and $1 (red)
+                const fives = Math.random() < 0.5 ? 1 : 0;
+                const ones = 1 + Math.floor(Math.random() * 4);
+                const total = fives * 5 + ones;
+                const notes = [...Array(fives).fill(5), ...Array(ones).fill(1)];
+                return {
+                    prompt: `How much <b class="kw">MONEY</b>?`,
+                    say: `How much money is this? Count it!`,
+                    visual: `<div class="note-row">${notes.map(noteHTML).join('')}</div>`,
+                    answers: numberButtons(Math.max(1, total - 3), Math.min(10, total + 3))
+                        .map(b => ({ html: '$' + b.html, value: b.value })),
+                    correct: total,
+                    explain: `Yes! That makes <b class="kw">$${total}</b>!`,
+                    explainSay: `Yes! That makes ${total} dollars!`,
+                    hint: () => ({
+                        text: fives
+                            ? `The green note is <b class="kw">5</b>. Start at 5, count ON!`
+                            : `Count the notes one by one!`,
+                        say: fives
+                            ? `The green note is 5 dollars. Start at 5 and count on the red ones!`
+                            : `Count the red notes one by one!`
+                    })
+                };
+            }
+            // Make the target amount — running total shown early, hidden later
+            const target = 6 + Math.floor(Math.random() * 5);   // $6..$10
+            const showTotal = band <= 2;
+            const q = {
+                prompt: `Make <b class="kw">$${target}</b>!`,
+                say: `Make ${target} dollars! Tap the notes. Stop at exactly ${target}!`,
+                visual: `<div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                            <div class="big-object" style="animation:none;">👛</div>
+                            <div class="money-total" id="moneyTotal">${showTotal ? '$0' : ''}</div>
+                         </div>`,
+                correct: target,
+                explain: `Yes! Exactly <b class="kw">$${target}</b>!`,
+                explainSay: `Yes! Exactly ${target} dollars! Great counting!`,
+                customAnswers(container) {
+                    const tray = [5, 5, 1, 1, 1, 1, 1, 1];
+                    const sum = () => Array.from(container.querySelectorAll('.note.selected'))
+                        .reduce((s, n) => s + parseInt(n.dataset.value), 0);
+                    const refresh = () => {
+                        const t = document.getElementById('moneyTotal');
+                        if (t && showTotal) t.textContent = '$' + sum();
+                    };
+                    tray.forEach(v => {
+                        const n = document.createElement('button');
+                        n.className = 'note ' + (v === 5 ? 'five' : 'one');
+                        n.dataset.value = v;
+                        n.textContent = '$' + v;
+                        n.onclick = () => {
+                            n.classList.toggle('selected');
+                            playSound('pop');
+                            refresh();
+                        };
+                        container.appendChild(n);
+                    });
+                    const done = document.createElement('button');
+                    done.className = 'answer-btn';
+                    done.id = 'moneyDone';
+                    done.textContent = '✔';
+                    done.onclick = () => {
+                        if (!currentQ) return;
+                        const s = sum();
+                        if (s === target) {
+                            mathSuccess(q, done);
+                        } else {
+                            // Re-scaffold: reveal the running total after a miss
+                            const t = document.getElementById('moneyTotal');
+                            if (t) t.textContent = '$' + s;
+                            mathWrong(q, s > target ? {
+                                text: `$${s} is <b class="kw">MORE</b> than $${target}. Take some away!`,
+                                say: `${s} dollars is too much! Stop at ${target}. Take some away!`
+                            } : {
+                                text: `$${s} is not enough. Count ON to $${target}!`,
+                                say: `${s} dollars is not enough yet. Count on to ${target}!`
+                            }, done);
+                        }
+                    };
+                    container.appendChild(done);
+                }
+            };
+            return q;
+        }
+
+        // ---------- WORDS (exam Q9: circled the elephant for "lighter";
+        // the asked word flips between rounds so she can't pattern-match) ----------
+        const WEIGHT_PAIRS = [
+            { big: '🐘', small: '🐭', bigName: 'elephant', smallName: 'mouse' },
+            { big: '🐋', small: '🐠', bigName: 'whale', smallName: 'little fish' },
+            { big: '🚚', small: '🎈', bigName: 'truck', smallName: 'balloon' },
+            { big: '🐄', small: '🐥', bigName: 'cow', smallName: 'chick' }
+        ];
+        const WORD_MEANINGS = {
+            BIGGER: 'BIGGER means large', SMALLER: 'SMALLER means little',
+            HEAVIER: 'HEAVIER means hard to lift', LIGHTER: 'LIGHTER means easy to lift, NOT heavy',
+            LONGER: 'LONGER means it stretches far', SHORTER: 'SHORTER means little',
+            MORE: 'MORE means a lot', LESS: 'LESS means not many'
+        };
+
+        function genWordsQ(band) {
+            const dims = band === 1 ? ['size', 'length'] : ['size', 'length', 'weight', 'count'];
+            const dim = dims[Math.floor(Math.random() * dims.length)];
+            const wantBig = Math.random() < 0.5;
+            let word, optionBig, optionSmall, explainThing;
+
+            if (dim === 'size') {
+                word = wantBig ? 'BIGGER' : 'SMALLER';
+                const e = ['🍎', '⭐', '🎁', '🐢', '🌻', '🧸'][Math.floor(Math.random() * 6)];
+                optionBig = `<span style="font-size:clamp(64px,13vw,110px)">${e}</span>`;
+                optionSmall = `<span style="font-size:clamp(28px,5.5vw,44px)">${e}</span>`;
+                explainThing = wantBig ? 'the big one' : 'the little one';
+            } else if (dim === 'length') {
+                word = wantBig ? 'LONGER' : 'SHORTER';
+                optionBig = `<div class="len-bar" style="width:clamp(110px,20vw,170px)"></div>`;
+                optionSmall = `<div class="len-bar" style="width:clamp(45px,8vw,70px)"></div>`;
+                explainThing = wantBig ? 'the long one' : 'the short one';
+            } else if (dim === 'weight') {
+                word = wantBig ? 'HEAVIER' : 'LIGHTER';
+                const p = WEIGHT_PAIRS[Math.floor(Math.random() * WEIGHT_PAIRS.length)];
+                optionBig = `<span style="font-size:clamp(54px,11vw,90px)">${p.big}</span>`;
+                optionSmall = `<span style="font-size:clamp(54px,11vw,90px)">${p.small}</span>`;
+                explainThing = wantBig ? `the ${p.bigName}` : `the ${p.smallName}`;
+            } else {
+                word = wantBig ? 'MORE' : 'LESS';
+                const e = ['🍓', '🍪', '⚽', '🎈'][Math.floor(Math.random() * 4)];
+                const few = 2 + Math.floor(Math.random() * 2);
+                const many = few + 2 + Math.floor(Math.random() * 3);
+                optionBig = `<div class="pick-group">${(`<span>${e}</span>`).repeat(many)}</div>`;
+                optionSmall = `<div class="pick-group">${(`<span>${e}</span>`).repeat(few)}</div>`;
+                explainThing = wantBig ? 'the group with a lot' : 'the small group';
+            }
+
+            const correctVal = wantBig ? 'big' : 'small';
+            const options = shuffled([
+                { html: optionBig, value: 'big', pick: true },
+                { html: optionSmall, value: 'small', pick: true }
+            ]);
+
+            return {
+                prompt: `Tap the <b class="kw">${word}</b> one!`,
+                say: `Listen for the word! Tap the ${word} one!`,
+                visual: `<div style="font-size:clamp(36px,7vw,60px)">👂</div>`,
+                answers: options,
+                correct: correctVal,
+                explain: `Yes! That is ${explainThing} — <b class="kw">${word}</b>!`,
+                explainSay: `Yes! That is ${explainThing}. It is ${word}!`,
+                hint: () => ({
+                    text: `${WORD_MEANINGS[word]}. Tap the <b class="kw">${word}</b> one!`,
+                    say: `${WORD_MEANINGS[word]}. Listen again: tap the ${word} one!`
+                })
+            };
+        }
+
+        // ---------- MONTHS (exam Q11b: wrote "5th" when the blank wanted "May";
+        // train ordinal -> month NAME mapping) ----------
+        const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+        const ORDINALS = ['1st', '2nd', '3rd', '4th', '5th', '6th',
+                          '7th', '8th', '9th', '10th', '11th', '12th'];
+
+        function monthPath(idx) {
+            return `<div class="month-path">${MONTHS.slice(0, idx + 1)
+                .map((m, i) => i === idx ? `<b class="kw">${m}</b>` : m).join(' → ')}</div>`;
+        }
+
+        function monthRecital(idx) {
+            return MONTHS.slice(0, idx + 1).join(', ') + `. ${MONTHS[idx]} is the ${ORDINALS[idx]} month!`;
+        }
+
+        function genMonthsQ(band) {
+            const maxIdx = band === 1 ? 6 : 12;
+            const idx = Math.floor(Math.random() * maxIdx);
+            const askName = band < 3 || Math.random() < 0.5;
+
+            if (askName) {
+                // "The 5th month is ___" -> wants a month NAME, her exact miss
+                const distractors = shuffled(MONTHS.slice(0, maxIdx).filter(m => m !== MONTHS[idx])).slice(0, 2);
+                return {
+                    prompt: `The <b class="kw">${ORDINALS[idx]}</b> month is…?`,
+                    say: `The ${ORDINALS[idx]} month of the year is which month? Say the months in your head!`,
+                    visual: `<div class="big-object" style="animation:none;">📅</div>`,
+                    answers: shuffled([MONTHS[idx], ...distractors]).map(m => ({ html: m, value: m })),
+                    correct: MONTHS[idx],
+                    explain: `Yes! <b class="kw">${MONTHS[idx]}</b> is the ${ORDINALS[idx]} month!`,
+                    explainSay: monthRecital(idx),
+                    hint: () => ({
+                        text: `Count the months from January!`,
+                        say: monthRecital(idx),
+                        reScaffold: monthPath(idx)
+                    })
+                };
+            }
+            // "May is the ___ month" -> wants the ordinal
+            const distractors = shuffled(ORDINALS.slice(0, maxIdx).filter(o => o !== ORDINALS[idx])).slice(0, 2);
+            return {
+                prompt: `${MONTHS[idx]} is the <b class="kw">?</b> month`,
+                say: `${MONTHS[idx]} is which number month? Count from January!`,
+                visual: `<div class="big-object" style="animation:none;">📅</div>`,
+                answers: shuffled([ORDINALS[idx], ...distractors]).map(o => ({ html: o, value: o })),
+                correct: ORDINALS[idx],
+                explain: `Yes! ${MONTHS[idx]} is the <b class="kw">${ORDINALS[idx]}</b> month!`,
+                explainSay: monthRecital(idx),
+                hint: () => ({
+                    text: `Count the months from January!`,
+                    say: monthRecital(idx),
+                    reScaffold: monthPath(idx)
+                })
             };
         }
 
