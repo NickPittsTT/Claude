@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Monster Kitchen 👨‍🍳</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c17 100%);
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Title Screen */
+        .title-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0f0a 0%, #3d2317 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            flex-direction: column;
+        }
+        .title-screen.hidden { display: none !important; }
+
+        .game-title {
+            font-size: clamp(28px, 5vw, 48px);
+            color: #FFD700;
+            text-shadow: 3px 3px 0 #5D3A1A, 6px 6px 0 rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            text-align: center;
+            animation: titleBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes titleBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .start-btn {
+            background: linear-gradient(180deg, #FF8C42 0%, #FF6B35 100%);
+            color: #fff;
+            border: none;
+            padding: clamp(15px, 3vw, 25px) clamp(30px, 5vw, 60px);
+            font-size: clamp(18px, 3vw, 28px);
+            font-weight: bold;
+            border-radius: 35px;
+            cursor: pointer;
+            border: 4px solid #D84315;
+            box-shadow: 0 6px 0 #D84315, 0 10px 20px rgba(0,0,0,0.3);
+            font-family: inherit;
+            animation: pulse 1.5s ease-in-out infinite;
+            transition: all 0.1s;
+        }
+        .start-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0 0 #D84315, 0 5px 10px rgba(0,0,0,0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Game Container */
+        .game-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+        }
+        .game-container.active { display: flex; }
+
+        /* Header */
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.3);
+            color: white;
+            font-size: clamp(14px, 2.5vw, 20px);
+        }
+        .level-info { display: flex; flex-direction: column; gap: 5px; }
+        .timer {
+            font-weight: bold;
+            font-size: clamp(18px, 3vw, 24px);
+            transition: all 0.3s;
+        }
+        .timer.warning { color: #FFD700; animation: pulse 0.5s infinite; }
+        .timer.urgent { color: #ff4444; animation: pulse 0.3s infinite; }
+
+        /* Main Game Area */
+        .main-area {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Monster Area */
+        .monster-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        .monster-svg {
+            width: clamp(80px, 15vw, 150px);
+            height: auto;
+            transition: transform 0.3s;
+        }
+        .monster-svg.impatient { animation: shake 0.5s infinite; }
+        .monster-svg.happy { animation: bounce 0.5s infinite; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-5deg); }
+            75% { transform: translateX(5px) rotate(5deg); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Order Bubble */
+        .order-bubble {
+            background: white;
+            border-radius: 20px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .order-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid white;
+        }
+        .order-items {
+            font-size: clamp(20px, 4vw, 32px);
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .order-items.hidden span { filter: blur(12px); opacity: 0.4; }
+        .memory-warning {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #FFD700;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: clamp(12px, 2vw, 16px);
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .memory-warning.show { opacity: 1; }
+
+        /* Plate Area */
+        .plate-section {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        .plate {
+            width: clamp(200px, 40vw, 350px);
+            height: clamp(200px, 40vw, 350px);
+            background: radial-gradient(circle, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 50%;
+            border: 8px solid #ccc;
+            box-shadow: inset 0 5px 15px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.2);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            place-items: center;
+            gap: 5px;
+            padding: 15px;
+            position: relative;
+            cursor: pointer;
+        }
+        .plate-slot {
+            width: clamp(45px, 8vw, 65px);
+            height: clamp(45px, 8vw, 65px);
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            border: 3px dashed #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(28px, 5vw, 40px);
+            transition: all 0.2s;
+            pointer-events: none;
+        }
+        .plate-slot.filled {
+            border-style: solid;
+            background: rgba(255,255,255,0.8);
+            animation: popIn 0.3s;
+        }
+        .plate-slot.highlighted {
+            background: rgba(255,215,0,0.5);
+            border-color: #FFD700;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Prep Station */
+        .prep-station {
+            display: none;
+            background: linear-gradient(180deg, #8B4513 0%, #654321 100%);
+            border-radius: 15px;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+        }
+        .prep-station.active { display: block; }
+        .prep-bowl {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #fff 0%, #ddd 100%);
+            border-radius: 50%;
+            margin: 10px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            border: 4px solid #654321;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .prep-instructions {
+            color: white;
+            font-size: clamp(12px, 2vw, 16px);
+            margin-bottom: 5px;
+        }
+
+        /* Pantry */
+        .pantry {
+            height: clamp(180px, 30vh, 280px);
+            background: linear-gradient(180deg, #8B5A2B 0%, #654321 100%);
+            border-top: 5px solid #4a2c17;
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            align-items: center;
+        }
+        .ingredient {
+            width: clamp(50px, 8vw, 70px);
+            height: clamp(50px, 8vw, 70px);
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(32px, 6vw, 45px);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            border: 3px solid transparent;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .ingredient:hover { transform: scale(1.1); background: rgba(255,255,255,0.3); }
+        .ingredient.selected {
+            border-color: #FFD700;
+            background: rgba(255,215,0,0.4);
+            animation: glow 0.5s infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 10px #FFD700; }
+            to { box-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700; }
+        }
+
+        /* Drag Clone */
+        .drag-clone {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: clamp(32px, 6vw, 45px);
+            opacity: 0.9;
+        }
+
+        /* Level Complete Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 500;
+            flex-direction: column;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+        .overlay.active { display: flex; }
+        .overlay h2 {
+            font-size: clamp(28px, 5vw, 48px);
+            color: #FFD700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #333;
+        }
+        .stars {
+            font-size: clamp(40px, 8vw, 80px);
+            margin: 20px 0;
+        }
+        .next-btn {
+            background: linear-gradient(180deg, #4CAF50 0%, #388E3C 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: clamp(18px, 3vw, 24px);
+            border-radius: 25px;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 20px;
+            box-shadow: 0 5px 0 #2E7D32;
+        }
+        .next-btn:active {
+            transform: translateY(5px);
+            box-shadow: none;
+        }
+
+        /* Landscape Optimization */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .game-header { padding: 5px 10px; font-size: 14px; }
+            .main-area { flex-direction: row; }
+            .monster-section { flex: 0.8; }
+            .monster-svg { width: 80px; }
+            .plate-section { flex: 1.2; }
+            .plate { width: 180px; height: 180px; }
+            .plate-slot { width: 45px; height: 45px; }
+            .pantry { height: 120px; }
+            .ingredient { width: 55px; height: 55px; font-size: 32px; }
+        }
+
+        /* Particles */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 600;
+            animation: particleFade 0.8s ease-out forwards;
+        }
+        @keyframes particleFade {
+            0% { opacity: 1; transform: scale(1) translateY(0); }
+            100% { opacity: 0; transform: scale(0.5) translateY(-50px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Title Screen -->
+    <div class="title-screen" id="titleScreen">
+        <div class="game-title">👨‍🍳 Monster Kitchen 👨‍🍳</div>
+        <button class="start-btn" onclick="startGame()">START COOKING!</button>
+    </div>
+
+    <!-- Game Container -->
+    <div class="game-container" id="gameContainer">
+        <!-- Header -->
+        <div class="game-header">
+            <div class="level-info">
+                <span>Level <span id="levelDisplay">1</span>/12</span>
+                <span style="font-size: 0.8em; opacity: 0.8;" id="levelName">Morning Shift</span>
+            </div>
+            <div class="timer" id="timer">60s</div>
+        </div>
+
+        <!-- Main Area -->
+        <div class="main-area">
+            <!-- Monster Section -->
+            <div class="monster-section">
+                <svg class="monster-svg" id="monster" viewBox="0 0 100 100">
+                    <ellipse cx="50" cy="50" rx="40" ry="35" fill="#7CB342"/>
+                    <circle cx="35" cy="45" r="8" fill="white"/>
+                    <circle cx="65" cy="45" r="8" fill="white"/>
+                    <circle cx="37" cy="45" r="4" fill="black"/>
+                    <circle cx="67" cy="45" r="4" fill="black"/>
+                    <ellipse cx="50" cy="60" rx="15" ry="8" fill="#33691E"/>
+                    <path d="M 45 58 Q 50 65 55 58" stroke="white" stroke-width="2" fill="none"/>
+                    <circle cx="20" cy="30" r="5" fill="#7CB342"/>
+                    <circle cx="80" cy="30" r="5" fill="#7CB342"/>
+                </svg>
+                <div class="order-bubble">
+                    <div class="memory-warning" id="memoryWarning">Watch carefully!</div>
+                    <div class="order-items" id="orderItems"></div>
+                </div>
+            </div>
+
+            <!-- Plate Section -->
+            <div class="plate-section">
+                <div class="plate" id="plate"></div>
+            </div>
+        </div>
+
+        <!-- Prep Station -->
+        <div class="prep-station" id="prepStation">
+            <div class="prep-instructions" id="prepInstructions">Make Egg Salad!</div>
+            <div class="prep-bowl" id="prepBowl">🥣</div>
+        </div>
+
+        <!-- Pantry -->
+        <div class="pantry" id="pantry"></div>
+    </div>
+
+    <!-- Level Complete Overlay -->
+    <div class="overlay" id="levelOverlay">
+        <h2 id="overlayTitle">Delicious!</h2>
+        <div class="stars" id="stars">⭐⭐⭐</div>
+        <p id="overlayMessage">Order completed perfectly!</p>
+        <button class="next-btn" id="nextBtn" onclick="nextLevel()">Next Level ➡️</button>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div class="overlay" id="gameOverOverlay">
+        <h2 style="color: #ff6b6b;">Time's Up!</h2>
+        <div class="stars" id="finalStars">⭐</div>
+        <p>The monster is hungry! Try again?</p>
+        <button class="next-btn" onclick="retryLevel()">Try Again 🔄</button>
+    </div>
+
+    <script>
+        // --- GAME STATE ---
+        let gameState = {
+            level: 1,
+            score: 0,
+            timeLeft: 60,
+            timerInterval: null,
+            memoryTimeout: null,
+            selectedIngredient: null,
+            plateSlots: [],
+            currentOrder: [],
+            targetCategory: null,
+            prepRequired: false,
+            prepIngredients: [],
+            prepCollected: [],
+            prepTarget: null,
+            prepComplete: false,
+            memoryMode: false,
+            orderVisible: true
+        };
+
+        // --- LEVEL CONFIG ---
+        const levels = [
+            { name: "Morning Shift", time: 60, items: 2, memory: false, prep: false, type: "exact" },
+            { name: "Color Match", time: 55, items: 3, memory: false, prep: false, type: "color" },
+            { name: "Shape Sorter", time: 50, items: 3, memory: false, prep: false, type: "shape" },
+            { name: "Prep Time!", time: 50, items: 3, memory: false, prep: true, type: "exact" },
+            { name: "Memory Challenge", time: 45, items: 3, memory: true, prep: false, type: "exact" },
+            { name: "Speed Round", time: 40, items: 4, memory: false, prep: false, type: "exact" },
+            { name: "Mix Master", time: 40, items: 4, memory: true, prep: true, type: "exact" },
+            { name: "Expert Chef", time: 35, items: 5, memory: false, prep: false, type: "exact" },
+            { name: "Ultimate Test", time: 30, items: 5, memory: true, prep: true, type: "exact" },
+            { name: "Speed Demon", time: 25, items: 6, memory: false, prep: false, type: "exact" },
+            { name: "Master Chef", time: 20, items: 7, memory: true, prep: true, type: "exact" },
+            { name: "Legend Chef", time: 15, items: 8, memory: true, prep: true, type: "exact" }
+        ];
+
+        // --- INGREDIENTS ---
+        const ingredients = {
+            exact: ['🍎', '🍌', '🍇', '🍓', '🥕', '🌽', '🥦', '🍄'],
+            color: {
+                red: ['🍎', '🍓', '🍅', '🌶️'],
+                yellow: ['🍌', '🌽', '🧀', '🍋'],
+                green: ['🥦', '🥒', '🍐', '🥝']
+            },
+            shape: {
+                round: ['🍎', '🍊', '🍋', '🥔'],
+                long: ['🍌', '🥕', '🥒', '🌽']
+            },
+            prep: {
+                '🥗': ['🥚', '🥚', '🧂'],
+                '🥪': ['🍞', '🥬', '🍅'],
+                '🍲': ['🥕', '🥔', '🧅']
+            }
+        };
+
+        // --- AUDIO SYSTEM ---
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSound(type) {
+            if (!audioCtx) return;
+
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            switch(type) {
+                case 'pop':
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                    break;
+                case 'snap':
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                    break;
+                case 'correct':
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                    break;
+                case 'wrong':
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                    break;
+                case 'fanfare':
+                    const notes = [523.25, 659.25, 783.99, 1046.50];
+                    notes.forEach((freq, i) => {
+                        const o = audioCtx.createOscillator();
+                        const g = audioCtx.createGain();
+                        o.connect(g);
+                        g.connect(audioCtx.destination);
+                        o.frequency.value = freq;
+                        g.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.15);
+                        o.start(audioCtx.currentTime + i * 0.15);
+                        o.stop(audioCtx.currentTime + i * 0.15 + 0.3);
+                    });
+                    break;
+                case 'tick':
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.05);
+                    break;
+            }
+        }
+
+        // --- HAPTICS ---
+        function vibrate(pattern) {
+            if (navigator.vibrate) {
+                navigator.vibrate(pattern);
+            }
+        }
+
+        // --- START GAME ---
+        function startGame() {
+            initAudio();
+
+            // Load saved progress
+            const saved = localStorage.getItem('monsterKitchenSave');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    gameState.level = data.level || 1;
+                    if (gameState.level < 1 || gameState.level > levels.length) {
+                        gameState.level = 1;
+                    }
+                } catch(e) {
+                    gameState.level = 1;
+                }
+            } else {
+                gameState.level = 1;
+            }
+
+            document.getElementById('titleScreen').classList.add('hidden');
+            document.getElementById('gameContainer').classList.add('active');
+
+            loadLevel(gameState.level);
+        }
+
+        // --- LOAD LEVEL ---
+        function loadLevel(levelNum) {
+            const config = levels[levelNum - 1];
+            if (!config) {
+                console.error('Level not found:', levelNum);
+                return;
+            }
+
+            // Kill any leftover timers from the previous level
+            stopTimer();
+            clearTimeout(gameState.memoryTimeout);
+
+            gameState.level = levelNum;
+            gameState.timeLeft = config.time;
+            gameState.prepRequired = config.prep;
+            gameState.memoryMode = config.memory;
+            gameState.prepComplete = !config.prep;
+            gameState.orderVisible = true;
+            gameState.selectedIngredient = null;
+            gameState.targetCategory = null;
+            gameState.currentOrder = [];
+
+            // Update UI
+            document.getElementById('levelDisplay').textContent = levelNum;
+            document.getElementById('levelName').textContent = config.name;
+            document.getElementById('timer').textContent = gameState.timeLeft + 's';
+            document.getElementById('timer').className = 'timer';
+            document.getElementById('memoryWarning').classList.remove('show');
+            document.getElementById('monster').classList.remove('happy', 'impatient');
+
+            // Generate plate slots
+            setupPlate(config.items);
+
+            // Prep levels: do the prep first, the plate order comes after
+            const prepStation = document.getElementById('prepStation');
+            if (config.prep) {
+                prepStation.classList.add('active');
+                startPrepPhase();
+            } else {
+                prepStation.classList.remove('active');
+                generateRegularOrder();
+                setupMainPantry(config);
+            }
+
+            // Start timer
+            startTimer();
+        }
+
+        // --- GENERATE ORDER ---
+        function generateRegularOrder() {
+            const config = levels[gameState.level - 1];
+            let order = [];
+
+            if (config.type === 'exact') {
+                for (let i = 0; i < config.items; i++) {
+                    order.push(ingredients.exact[Math.floor(Math.random() * ingredients.exact.length)]);
+                }
+            } else if (config.type === 'color') {
+                const colors = Object.keys(ingredients.color);
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                gameState.targetCategory = color;
+                for (let i = 0; i < config.items; i++) {
+                    order.push(ingredients.color[color][Math.floor(Math.random() * ingredients.color[color].length)]);
+                }
+            } else if (config.type === 'shape') {
+                const shapes = Object.keys(ingredients.shape);
+                const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                gameState.targetCategory = shape;
+                for (let i = 0; i < config.items; i++) {
+                    order.push(ingredients.shape[shape][Math.floor(Math.random() * ingredients.shape[shape].length)]);
+                }
+            }
+
+            gameState.currentOrder = order;
+            displayOrder(order);
+
+            if (config.memory) {
+                document.getElementById('memoryWarning').classList.add('show');
+                clearTimeout(gameState.memoryTimeout);
+                gameState.memoryTimeout = setTimeout(() => {
+                    hideOrder();
+                    document.getElementById('memoryWarning').classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // --- DISPLAY ORDER ---
+        function displayOrder(order) {
+            const container = document.getElementById('orderItems');
+            container.innerHTML = order.map(item => `<span>${item}</span>`).join('');
+            container.classList.remove('hidden');
+            gameState.orderVisible = true;
+        }
+
+        function hideOrder() {
+            const container = document.getElementById('orderItems');
+            container.classList.add('hidden');
+            gameState.orderVisible = false;
+        }
+
+        // --- SETUP PLATE ---
+        function setupPlate(numSlots) {
+            const plate = document.getElementById('plate');
+            plate.innerHTML = '';
+            gameState.plateSlots = new Array(numSlots).fill(null);
+
+            for (let i = 0; i < numSlots; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'plate-slot';
+                slot.dataset.index = i;
+                plate.appendChild(slot);
+            }
+        }
+
+        function clearPlate() {
+            gameState.plateSlots = gameState.plateSlots.map(() => null);
+            document.querySelectorAll('.plate-slot').forEach(slot => {
+                slot.textContent = '';
+                slot.classList.remove('filled');
+            });
+        }
+
+        // --- SETUP PANTRY ---
+        function buildPantry(emojis) {
+            const pantry = document.getElementById('pantry');
+            pantry.innerHTML = '';
+
+            emojis.forEach(emoji => {
+                const div = document.createElement('div');
+                div.className = 'ingredient';
+                div.textContent = emoji;
+                div.dataset.emoji = emoji;
+
+                div.addEventListener('mousedown', handleInputStart);
+                div.addEventListener('touchstart', handleInputStart, { passive: false });
+
+                pantry.appendChild(div);
+            });
+        }
+
+        function setupMainPantry(config) {
+            let available;
+
+            if (config.type === 'color') {
+                // Everything from the target color, plus distractors from other colors
+                const target = ingredients.color[gameState.targetCategory];
+                const others = Object.keys(ingredients.color)
+                    .filter(c => c !== gameState.targetCategory)
+                    .flatMap(c => ingredients.color[c]);
+                others.sort(() => Math.random() - 0.5);
+                available = [...target, ...others.slice(0, 4)];
+            } else if (config.type === 'shape') {
+                const target = ingredients.shape[gameState.targetCategory];
+                const others = Object.keys(ingredients.shape)
+                    .filter(s => s !== gameState.targetCategory)
+                    .flatMap(s => ingredients.shape[s])
+                    .filter(e => !target.includes(e));
+                others.sort(() => Math.random() - 0.5);
+                available = [...target, ...others.slice(0, 4)];
+            } else {
+                // Exact levels: every ingredient the order can ask for must be here
+                available = [...ingredients.exact];
+            }
+
+            available.sort(() => Math.random() - 0.5);
+            buildPantry(available);
+        }
+
+        // --- PREP PHASE ---
+        function startPrepPhase() {
+            const prepItems = Object.keys(ingredients.prep);
+            const selectedItem = prepItems[Math.floor(Math.random() * prepItems.length)];
+
+            gameState.prepTarget = selectedItem;
+            gameState.prepIngredients = [...ingredients.prep[selectedItem]];
+            gameState.prepCollected = [];
+
+            document.getElementById('prepInstructions').textContent = `Make ${selectedItem}! Tap: ${ingredients.prep[selectedItem].join(' ')}`;
+            document.getElementById('prepBowl').textContent = '🥣';
+
+            // Order bubble shows the dish while prepping
+            document.getElementById('orderItems').innerHTML = `<span>${selectedItem}</span>`;
+            document.getElementById('orderItems').classList.remove('hidden');
+
+            // Pantry holds the recipe ingredients plus a few distractors
+            const required = [...new Set(gameState.prepIngredients)];
+            const distractors = [...ingredients.exact]
+                .filter(e => !required.includes(e))
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 4);
+            const pantryItems = [...required, ...distractors];
+            pantryItems.sort(() => Math.random() - 0.5);
+            buildPantry(pantryItems);
+        }
+
+        function handlePrepInput(emoji) {
+            const index = gameState.prepIngredients.indexOf(emoji);
+            if (index === -1) {
+                playSound('wrong');
+                vibrate(50);
+                return;
+            }
+
+            gameState.prepIngredients.splice(index, 1);
+            gameState.prepCollected.push(emoji);
+
+            const bowl = document.getElementById('prepBowl');
+            bowl.textContent = gameState.prepCollected.join('');
+
+            playSound('pop');
+            vibrate(10);
+
+            if (gameState.prepIngredients.length === 0) {
+                // Prep complete!
+                setTimeout(() => {
+                    bowl.textContent = gameState.prepTarget;
+                    gameState.prepComplete = true;
+                    playSound('correct');
+                    vibrate([10, 50, 10]);
+                    const rect = bowl.getBoundingClientRect();
+                    createParticles(rect.left, rect.top);
+                    document.getElementById('prepInstructions').textContent = `${gameState.prepTarget} ready! Now fill the plate!`;
+
+                    // Now the real order begins
+                    generateRegularOrder();
+                    setupMainPantry(levels[gameState.level - 1]);
+                }, 500);
+            }
+        }
+
+        // --- INPUT HANDLING ---
+        function handleInputStart(e) {
+            e.preventDefault();
+            const ingredient = e.currentTarget;
+            const emoji = ingredient.dataset.emoji;
+
+            // During prep phase, taps feed the bowl
+            if (gameState.prepRequired && !gameState.prepComplete) {
+                handlePrepInput(emoji);
+                return;
+            }
+
+            // Grabbing an ingredient always selects it and starts a drag —
+            // no deselect toggle, so duplicate orders (🍎🍎) work naturally
+            document.querySelectorAll('.ingredient').forEach(i => i.classList.remove('selected'));
+            ingredient.classList.add('selected');
+            gameState.selectedIngredient = emoji;
+            playSound('pop');
+            vibrate(10);
+
+            startDrag(e, emoji);
+        }
+
+        function startDrag(e, emoji) {
+            const clone = document.createElement('div');
+            clone.className = 'drag-clone';
+            clone.textContent = emoji;
+
+            const startX = e.touches ? e.touches[0].clientX : e.clientX;
+            const startY = e.touches ? e.touches[0].clientY : e.clientY;
+            clone.style.left = (startX - 25) + 'px';
+            clone.style.top = (startY - 25) + 'px';
+            document.body.appendChild(clone);
+
+            const moveHandler = (ev) => {
+                const clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+                const clientY = ev.touches ? ev.touches[0].clientY : ev.clientY;
+                clone.style.left = (clientX - 25) + 'px';
+                clone.style.top = (clientY - 25) + 'px';
+            };
+
+            const endHandler = (ev) => {
+                document.removeEventListener('mousemove', moveHandler);
+                document.removeEventListener('mouseup', endHandler);
+                document.removeEventListener('touchmove', moveHandler);
+                document.removeEventListener('touchend', endHandler);
+                clone.remove();
+
+                // Check if dropped on plate
+                const clientX = ev.changedTouches ? ev.changedTouches[0].clientX : ev.clientX;
+                const clientY = ev.changedTouches ? ev.changedTouches[0].clientY : ev.clientY;
+
+                const plate = document.getElementById('plate');
+                const rect = plate.getBoundingClientRect();
+
+                if (clientX >= rect.left && clientX <= rect.right &&
+                    clientY >= rect.top && clientY <= rect.bottom) {
+                    placeOnPlate(emoji);
+                }
+            };
+
+            document.addEventListener('mousemove', moveHandler);
+            document.addEventListener('mouseup', endHandler);
+            document.addEventListener('touchmove', moveHandler, { passive: false });
+            document.addEventListener('touchend', endHandler);
+        }
+
+        // --- PLACE ON PLATE ---
+        function placeOnPlate(emoji) {
+            const emptyIndex = gameState.plateSlots.findIndex(s => s === null);
+            if (emptyIndex === -1) return;
+
+            gameState.plateSlots[emptyIndex] = emoji;
+
+            const slots = document.querySelectorAll('.plate-slot');
+            slots[emptyIndex].textContent = emoji;
+            slots[emptyIndex].classList.add('filled');
+
+            playSound('snap');
+            vibrate(10);
+
+            // Check if plate is full
+            if (!gameState.plateSlots.includes(null)) {
+                checkOrder();
+            }
+        }
+
+        // --- CHECK ORDER ---
+        function checkOrder() {
+            const config = levels[gameState.level - 1];
+            let success = false;
+
+            if (config.type === 'exact') {
+                // Exact match, order on the plate doesn't matter
+                const sortedPlate = [...gameState.plateSlots].sort();
+                const sortedOrder = [...gameState.currentOrder].sort();
+                success = sortedPlate.every((v, i) => v === sortedOrder[i]);
+            } else if (config.type === 'color') {
+                const valid = ingredients.color[gameState.targetCategory];
+                success = gameState.plateSlots.every(item => valid.includes(item));
+            } else if (config.type === 'shape') {
+                const valid = ingredients.shape[gameState.targetCategory];
+                success = gameState.plateSlots.every(item => valid.includes(item));
+            }
+
+            if (success) {
+                levelComplete(3);
+            } else {
+                playSound('wrong');
+                vibrate(50);
+                // Shake, then clear the plate so the kid can try again
+                const plate = document.getElementById('plate');
+                plate.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    plate.style.animation = '';
+                    clearPlate();
+                    // In memory mode, show the order again briefly as a second chance
+                    if (gameState.memoryMode) {
+                        displayOrder(gameState.currentOrder);
+                        clearTimeout(gameState.memoryTimeout);
+                        gameState.memoryTimeout = setTimeout(() => hideOrder(), 3000);
+                    }
+                }, 500);
+            }
+        }
+
+        // --- LEVEL COMPLETE ---
+        function levelComplete(stars) {
+            stopTimer();
+            clearTimeout(gameState.memoryTimeout);
+            playSound('fanfare');
+            vibrate([50, 50, 50]);
+
+            const overlay = document.getElementById('levelOverlay');
+            const monster = document.getElementById('monster');
+            monster.classList.remove('impatient');
+            monster.classList.add('happy');
+
+            document.getElementById('stars').textContent = '⭐'.repeat(stars);
+            document.getElementById('overlayMessage').textContent = `Perfect order in ${levels[gameState.level - 1].time - gameState.timeLeft} seconds!`;
+
+            if (gameState.level >= 12) {
+                document.getElementById('overlayTitle').textContent = '🏆 LEGEND CHEF! 🏆';
+                document.getElementById('nextBtn').textContent = 'Play Again 🔄';
+                document.getElementById('nextBtn').onclick = () => {
+                    localStorage.removeItem('monsterKitchenSave');
+                    location.reload();
+                };
+            } else {
+                document.getElementById('overlayTitle').textContent = 'Delicious!';
+                document.getElementById('nextBtn').textContent = 'Next Level ➡️';
+                document.getElementById('nextBtn').onclick = nextLevel;
+            }
+
+            overlay.classList.add('active');
+
+            // Save progress
+            localStorage.setItem('monsterKitchenSave', JSON.stringify({
+                level: Math.min(gameState.level + 1, 12)
+            }));
+        }
+
+        // --- NEXT LEVEL ---
+        function nextLevel() {
+            document.getElementById('levelOverlay').classList.remove('active');
+            document.getElementById('monster').classList.remove('happy', 'impatient');
+            loadLevel(gameState.level + 1);
+        }
+
+        // --- RETRY LEVEL ---
+        function retryLevel() {
+            document.getElementById('gameOverOverlay').classList.remove('active');
+            document.getElementById('monster').classList.remove('happy', 'impatient');
+            loadLevel(gameState.level);
+        }
+
+        // --- TIMER ---
+        function stopTimer() {
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+                gameState.timerInterval = null;
+            }
+        }
+
+        function startTimer() {
+            stopTimer();
+
+            gameState.timerInterval = setInterval(() => {
+                gameState.timeLeft--;
+                document.getElementById('timer').textContent = Math.max(0, gameState.timeLeft) + 's';
+
+                const timerEl = document.getElementById('timer');
+                const monster = document.getElementById('monster');
+
+                if (gameState.timeLeft <= 10) {
+                    timerEl.classList.add('urgent');
+                    timerEl.classList.remove('warning');
+                    monster.classList.add('impatient');
+                    playSound('tick');
+                } else if (gameState.timeLeft <= 20) {
+                    timerEl.classList.add('warning');
+                }
+
+                if (gameState.timeLeft <= 0) {
+                    gameOver();
+                }
+            }, 1000);
+        }
+
+        // --- GAME OVER ---
+        function gameOver() {
+            stopTimer();
+            clearTimeout(gameState.memoryTimeout);
+            playSound('wrong');
+            vibrate(200);
+
+            document.getElementById('gameOverOverlay').classList.add('active');
+            document.getElementById('finalStars').textContent = '⭐';
+        }
+
+        // --- PARTICLES ---
+        function createParticles(x, y) {
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = ['✨', '⭐', '🌟'][Math.floor(Math.random() * 3)];
+                particle.style.left = (x + Math.random() * 50 - 25) + 'px';
+                particle.style.top = (y + Math.random() * 50 - 25) + 'px';
+                particle.style.animationDelay = (i * 0.05) + 's';
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 800);
+            }
+        }
+
+        // --- TAP-TO-PLACE (second input mode for little fingers) ---
+        document.getElementById('plate').addEventListener('click', () => {
+            if (!gameState.selectedIngredient) return;
+            if (gameState.prepRequired && !gameState.prepComplete) return;
+            placeOnPlate(gameState.selectedIngredient);
+        });
+
+        // --- SAVE SYSTEM ---
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('monsterKitchenSave', JSON.stringify({
+                level: gameState.level
+            }));
+        });
+    </script>
+</body>
+</html>
