@@ -656,6 +656,15 @@
         }
         .swatch.selected { border-color: #FFD700; transform: scale(1.2); box-shadow: 0 0 12px #FFD700; }
 
+        /* Mobile browsers: size to the visible area, not behind the
+           collapsing address bar, so the pantry is never clipped */
+        @supports (height: 100dvh) {
+            html, body { height: 100dvh; }
+            .title-screen, .game-container, .math-screen, .color-screen, .overlay {
+                height: 100dvh;
+            }
+        }
+
         /* Particles */
         .particle {
             position: fixed;
